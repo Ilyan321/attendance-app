@@ -1,0 +1,9 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+/* Additional animations or custom styles */
+@layer utilities {
+  .card-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}

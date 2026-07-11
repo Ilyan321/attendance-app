@@ -1,0 +1,158 @@
+import React, { useState } from 'react';
+import Dashboard from './components/Dashboard';
+import AddClassModal from './components/AddClassModal';
+import AttendanceModal from './components/AttendanceModal';
+import './App.css';
+
+function App() {
+  // Global State
+  const [classes, setClasses] = useState([]);
+  const [isAddClassOpen, setIsAddClassOpen] = useState(false);
+  const [activeAttendanceClassId, setActiveAttendanceClassId] = useState(null);
+
+  // Add a new class to global state
+  const handleAddClass = ({ subjectName, student_roll_numbers }) => {
+    // Generate a clean subject/course code (e.g. "Advanced Mathematics" -> "ADV-MAT")
+    const generateCode = (name) => {
+      const cleanName = name.trim();
+      const words = cleanName.split(/\s+/);
+      if (words.length >= 2) {
+        return (words[0].substring(0, 3) + '-' + words[1].substring(0, 3)).toUpperCase();
+      } else if (cleanName.length > 0) {
+        const prefix = cleanName.substring(0, Math.min(4, cleanName.length)).toUpperCase();
+        return `${prefix}-101`;
+      }
+      return 'CLASS-101';
+    };
+
+    const newClass = {
+      id: Date.now().toString(),
+      subjectName,
+      subjectCode: generateCode(subjectName),
+      student_roll_numbers,
+      presentStudents: [], // Initialize present students as empty
+      attendanceTopic: 'Data Structures', // Default topic
+    };
+
+    setClasses((prevClasses) => [...prevClasses, newClass]);
+  };
+
+  // Save updated attendance details back to the global state
+  const handleSaveAttendance = (classId, presentRollNumbers, topic) => {
+    setClasses((prevClasses) =>
+      prevClasses.map((cls) =>
+        cls.id === classId
+          ? { ...cls, presentStudents: presentRollNumbers, attendanceTopic: topic }
+          : cls
+      )
+    );
+  };
+
+  // Find the selected class for attendance
+  const activeClass = classes.find((cls) => cls.id === activeAttendanceClassId);
+
+  return (
+    <div className="min-h-screen flex flex-col bg-background text-on-surface">
+      {/* Top Navigation Bar */}
+      <header className="bg-surface-container-lowest border-b border-outline-variant sticky top-0 w-full z-40">
+        <div className="flex justify-between items-center w-full px-12 py-4 max-w-[1440px] mx-auto">
+          <div className="flex items-center gap-4">
+            <span className="font-headline-md text-headline-md font-bold text-on-surface flex items-center gap-2">
+              <span className="material-symbols-outlined text-[28px] text-primary">school</span>
+              Professor Sarah Jenkins
+            </span>
+          </div>
+
+          <div className="flex items-center gap-8">
+            <nav className="hidden md:flex gap-6 items-center">
+              <button 
+                onClick={() => setActiveAttendanceClassId(null)}
+                className="text-primary font-bold border-b-2 border-primary pb-1 font-label-md text-label-md cursor-pointer"
+              >
+                Dashboard
+              </button>
+              <button className="text-on-surface-variant font-medium hover:bg-surface-container-low transition-colors duration-200 font-label-md text-label-md px-3 py-1 rounded cursor-pointer">
+                Schedule
+              </button>
+              <button className="text-on-surface-variant font-medium hover:bg-surface-container-low transition-colors duration-200 font-label-md text-label-md px-3 py-1 rounded cursor-pointer">
+                Settings
+              </button>
+            </nav>
+
+            <button
+              onClick={() => setIsAddClassOpen(true)}
+              className="bg-primary-container text-on-primary px-6 py-2.5 rounded-lg font-label-lg text-label-lg hover:opacity-90 transition-opacity flex items-center gap-2 cursor-pointer shadow-md shadow-primary-container/25"
+            >
+              <span className="material-symbols-outlined text-[20px]">add</span>
+              Add Class
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content Area */}
+      <div className="flex-grow pb-16">
+        <Dashboard
+          classes={classes}
+          onSelectClass={(id) => setActiveAttendanceClassId(id)}
+          onOpenAddClass={() => setIsAddClassOpen(true)}
+        />
+      </div>
+
+      {/* Footer */}
+      <footer className="w-full bg-surface-container border-t border-outline-variant py-8 px-12 mt-auto">
+        <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="font-headline-sm text-headline-sm text-primary font-bold flex items-center gap-2">
+            <span className="material-symbols-outlined">school</span>
+            EduFocus Portal
+          </div>
+          <div className="flex gap-8">
+            <a href="#" className="font-label-md text-label-md text-secondary hover:text-primary transition-colors duration-200">
+              Privacy Policy
+            </a>
+            <a href="#" className="font-label-md text-label-md text-secondary hover:text-primary transition-colors duration-200">
+              Support
+            </a>
+            <a href="#" className="font-label-md text-label-md text-secondary hover:text-primary transition-colors duration-200">
+              Terms of Service
+            </a>
+          </div>
+          <div className="font-label-md text-label-md text-secondary">
+            © 2026 EduFocus Portal. All rights reserved.
+          </div>
+        </div>
+      </footer>
+
+      {/* Mobile Navigation Bar */}
+      <nav className="fixed bottom-0 w-full z-40 flex justify-around items-center bg-surface-container-lowest py-3 border-t border-outline-variant md:hidden shadow-lg">
+        <button 
+          onClick={() => setActiveAttendanceClassId(null)}
+          className="flex flex-col items-center justify-center text-primary font-bold cursor-pointer"
+        >
+          <span className="material-symbols-outlined">dashboard</span>
+          <span className="font-label-md text-label-md">Dashboard</span>
+        </button>
+        <button className="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors cursor-pointer">
+          <span className="material-symbols-outlined">calendar_today</span>
+          <span className="font-label-md text-label-md">Schedule</span>
+        </button>
+      </nav>
+
+      {/* Modals */}
+      <AddClassModal
+        isOpen={isAddClassOpen}
+        onClose={() => setIsAddClassOpen(false)}
+        onAddClass={handleAddClass}
+      />
+
+      <AttendanceModal
+        isOpen={!!activeAttendanceClassId}
+        classData={activeClass}
+        onClose={() => setActiveAttendanceClassId(null)}
+        onSaveAttendance={handleSaveAttendance}
+      />
+    </div>
+  );
+}
+
+export default App;
