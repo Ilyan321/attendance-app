@@ -49,6 +49,7 @@ export default function Dashboard({ classes, onSelectClass, onOpenAddClass }) {
             </p>
           </div>
           <button
+            type="button"
             onClick={onOpenAddClass}
             className="bg-primary-container text-on-primary px-8 py-3.5 rounded-lg font-label-lg text-label-lg hover:opacity-90 transition-all active:scale-95 flex items-center gap-2 shadow-md shadow-primary-container/20 cursor-pointer"
           >

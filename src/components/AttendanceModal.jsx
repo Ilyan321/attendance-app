@@ -26,7 +26,8 @@ export default function AttendanceModal({ isOpen, classData, onClose, onSaveAtte
     }
   };
 
-  const handleSave = () => {
+  const handleSave = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
     onSaveAttendance(classData.id, presentRolls, topic);
     onClose();
   };
@@ -71,6 +72,7 @@ export default function AttendanceModal({ isOpen, classData, onClose, onSaveAtte
             </div>
             <button
               onClick={onClose}
+              type="button"
               className="bg-primary text-on-primary px-8 py-3 rounded-lg font-label-lg text-label-lg hover:opacity-90 active:scale-95 transition-all cursor-pointer"
             >
               Back to Dashboard
@@ -95,12 +97,14 @@ export default function AttendanceModal({ isOpen, classData, onClose, onSaveAtte
                 </div>
                 <div className="flex gap-4 w-full md:w-auto justify-end">
                   <button
+                    type="button"
                     onClick={onClose}
                     className="text-on-surface-variant hover:text-on-surface px-6 py-3 font-label-lg text-label-lg transition-colors cursor-pointer rounded-lg hover:bg-surface-container-low"
                   >
                     Cancel
                   </button>
                   <button
+                    type="button"
                     onClick={handleSave}
                     className="bg-primary-container text-on-primary px-8 py-3 font-label-lg text-label-lg rounded-lg hover:opacity-90 transition-all active:scale-95 shadow-md shadow-primary-container/20 cursor-pointer"
                   >
@@ -126,6 +130,7 @@ export default function AttendanceModal({ isOpen, classData, onClose, onSaveAtte
                   return (
                     <button
                       key={roll}
+                      type="button"
                       onClick={() => toggleStudent(roll)}
                       className={`p-8 font-label-lg text-label-lg text-center rounded-xl transition-all duration-200 cursor-pointer ${
                         isPresent

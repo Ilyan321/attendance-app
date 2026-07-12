@@ -8,7 +8,7 @@ export default function AddClassModal({ isOpen, onClose, onAddClass }) {
   if (!isOpen) return null;
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
     setError('');
 
     if (!subjectName.trim()) {
@@ -69,7 +69,8 @@ export default function AddClassModal({ isOpen, onClose, onAddClass }) {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+        {/* Form Container (Standard div instead of form) */}
+        <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-2">
             <label className="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">
               Subject Name
@@ -105,13 +106,14 @@ export default function AddClassModal({ isOpen, onClose, onAddClass }) {
               Cancel
             </button>
             <button
-              type="submit"
+              type="button"
+              onClick={handleSubmit}
               className="bg-[#10B981] text-white px-8 py-3 rounded-lg font-label-lg text-label-lg hover:bg-opacity-90 active:scale-95 transition-all cursor-pointer"
             >
               Create Class
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
