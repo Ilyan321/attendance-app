@@ -83,8 +83,8 @@ export default function ScheduleModal({ isOpen, onClose }) {
       setNewTime('');
       setNewDay('Monday');
     } catch (err) {
-      console.error('Error adding schedule:', err.message);
-      setFormError('Failed to save. Please try again.');
+      console.error('Error adding schedule:', err);
+      setFormError(err.message || JSON.stringify(err));
     } finally {
       setAdding(false);
     }
