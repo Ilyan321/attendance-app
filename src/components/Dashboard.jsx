@@ -81,18 +81,18 @@ export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDe
               <div
                 key={cls.id}
                 onClick={() => onSelectClass(cls.id)}
-                className="bg-surface-container hover:bg-surface-container-high p-8 min-h-[220px] rounded-xl flex flex-col justify-between group cursor-pointer transition-all duration-300 border border-outline-variant hover:shadow-lg hover:-translate-y-1"
+                className="bg-surface-container hover:bg-surface-container-high p-8 min-h-[220px] rounded-xl flex flex-col justify-between cursor-pointer transition-all duration-300 border border-outline-variant hover:shadow-lg hover:-translate-y-1"
               >
                 <div>
                   <div className="flex justify-between items-start mb-4">
                     <span className="bg-surface-container-lowest px-3 py-1.5 text-on-surface-variant font-label-md text-label-md rounded font-semibold tracking-wider border border-outline-variant/30">
                       {cls.subjectCode}
                     </span>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
                       <button
                         type="button"
                         onClick={(e) => { e.stopPropagation(); onEditClass(cls); }}
-                        className="opacity-0 group-hover:opacity-100 transition-all duration-200 text-primary hover:bg-primary/10 rounded p-1 flex items-center justify-center cursor-pointer"
+                        className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded p-1 flex items-center justify-center cursor-pointer transition-colors duration-200"
                         title="Edit class"
                       >
                         <span className="material-symbols-outlined text-[20px]">edit_square</span>
@@ -100,14 +100,11 @@ export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDe
                       <button
                         type="button"
                         onClick={(e) => handleDeleteClass(e, cls.id)}
-                        className="opacity-0 group-hover:opacity-100 transition-all duration-200 text-[#ba1a1a] hover:bg-[#ba1a1a]/10 rounded p-1 flex items-center justify-center cursor-pointer"
+                        className="text-red-600 hover:text-red-800 hover:bg-red-50 rounded p-1 flex items-center justify-center cursor-pointer transition-colors duration-200"
                         title="Delete class"
                       >
                         <span className="material-symbols-outlined text-[20px]">delete</span>
                       </button>
-                      <span className="material-symbols-outlined text-primary opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-1 duration-200">
-                        arrow_forward
-                      </span>
                     </div>
                   </div>
                   <h2 className="font-headline-md text-headline-md text-on-background font-bold line-clamp-2">
