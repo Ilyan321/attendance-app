@@ -4,13 +4,14 @@ export default function AttendanceModal({ isOpen, classData, onClose, onSaveAtte
   const [topic, setTopic] = useState('Data Structures');
   const [presentRolls, setPresentRolls] = useState([]);
 
-  // Sync state with classData when modal opens or classData changes
+  // Reset to a clean slate every time the modal opens so each session is independent.
+  // Topic is pre-filled as a convenience; present rolls always start empty.
   useEffect(() => {
-    if (classData) {
+    if (isOpen && classData) {
       setTopic(classData.attendanceTopic || 'Data Structures');
-      setPresentRolls(classData.presentStudents || []);
+      setPresentRolls([]);
     }
-  }, [classData, isOpen]);
+  }, [isOpen, classData]);
 
   if (!isOpen || !classData) return null;
 
