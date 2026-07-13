@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
 export default function AttendanceModal({ isOpen, classData, onClose, onSaveAttendance }) {
-  const [topic, setTopic] = useState('Data Structures');
+  const [topic, setTopic] = useState('');
   const [presentRolls, setPresentRolls] = useState([]);
 
   // Reset to a clean slate every time the modal opens so each session is independent.
-  // Topic is pre-filled as a convenience; present rolls always start empty.
   useEffect(() => {
     if (isOpen && classData) {
-      setTopic(classData.attendanceTopic || 'Data Structures');
+      setTopic('');
       setPresentRolls([]);
     }
   }, [isOpen, classData]);
@@ -29,6 +28,10 @@ export default function AttendanceModal({ isOpen, classData, onClose, onSaveAtte
 
   const handleSave = (e) => {
     if (e && e.preventDefault) e.preventDefault();
+    if (!topic || topic.trim() === '') {
+      alert('Please enter what you taught today before saving attendance.');
+      return;
+    }
     onSaveAttendance(classData.id, presentRolls, topic);
     onClose();
   };
@@ -90,7 +93,7 @@ export default function AttendanceModal({ isOpen, classData, onClose, onSaveAtte
                   </label>
                   <input
                     className="w-full bg-surface-container text-on-surface px-4 py-3 border-none focus:ring-2 focus:ring-primary-container font-body-md text-body-md rounded-lg outline-none"
-                    placeholder="Topic here: "
+                    placeholder="What you taught today"
                     type="text"
                     value={topic}
                     onChange={(e) => setTopic(e.target.value)}
