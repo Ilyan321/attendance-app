@@ -1,7 +1,7 @@
 import React from 'react';
 import supabase from './supabaseClient';
 
-export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDeleteClass, onEditClass }) {
+export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDeleteClass, onEditClass, onViewHistory }) {
   const hasClasses = classes.length > 0;
 
   const handleDeleteClass = async (e, classId) => {
@@ -89,6 +89,14 @@ export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDe
                       {cls.subjectCode}
                     </span>
                     <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); onViewHistory(cls); }}
+                        className="text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 rounded p-1 flex items-center justify-center cursor-pointer transition-colors duration-200"
+                        title="View attendance history"
+                      >
+                        <span className="material-symbols-outlined text-[20px]">calendar_month</span>
+                      </button>
                       <button
                         type="button"
                         onClick={(e) => { e.stopPropagation(); onEditClass(cls); }}

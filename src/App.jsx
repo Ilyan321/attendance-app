@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Dashboard from './components/Dashboard';
 import AddClassModal from './components/AddClassModal';
 import AttendanceModal from './components/AttendanceModal';
+import HistoryModal from './components/HistoryModal';
 import Auth from './components/Auth';
 import supabase from './components/supabaseClient';
 import './App.css';
@@ -14,6 +15,8 @@ function App() {
   const [isAddClassOpen, setIsAddClassOpen] = useState(false);
   const [activeAttendanceClassId, setActiveAttendanceClassId] = useState(null);
   const [editingClass, setEditingClass] = useState(null);
+  const [historyModalOpen, setHistoryModalOpen] = useState(false);
+  const [selectedHistoryClass, setSelectedHistoryClass] = useState(null);
 
   // Monitor Supabase Authentication state
   useEffect(() => {
@@ -263,6 +266,7 @@ function App() {
           onOpenAddClass={() => setIsAddClassOpen(true)}
           onDeleteClass={(id) => setClasses((prev) => prev.filter((cls) => cls.id !== id))}
           onEditClass={(cls) => { setEditingClass(cls); setIsAddClassOpen(true); }}
+          onViewHistory={(cls) => { setSelectedHistoryClass(cls); setHistoryModalOpen(true); }}
         />
       </div>
 
@@ -326,6 +330,14 @@ function App() {
         classData={activeClass}
         onClose={() => setActiveAttendanceClassId(null)}
         onSaveAttendance={handleSaveAttendance}
+      />
+
+      <HistoryModal
+        isOpen={historyModalOpen}
+        onClose={() => { setHistoryModalOpen(false); setSelectedHistoryClass(null); }}
+        classId={selectedHistoryClass?.id}
+        className={selectedHistoryClass?.subjectName}
+        totalRollNumbers={selectedHistoryClass?.student_roll_numbers}
       />
     </div>
   );
