@@ -1,7 +1,21 @@
 import React from 'react';
+import supabase from './supabaseClient';
 
-export default function Dashboard({ classes, onSelectClass, onOpenAddClass }) {
+export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDeleteClass, onEditClass }) {
   const hasClasses = classes.length > 0;
+
+  const handleDeleteClass = async (e, classId) => {
+    e.stopPropagation();
+    const confirmed = window.confirm('Are you sure you want to delete this class? This cannot be undone.');
+    if (!confirmed) return;
+    try {
+      const { error } = await supabase.from('classes').delete().eq('id', classId);
+      if (error) throw error;
+      onDeleteClass(classId);
+    } catch (err) {
+      console.error('Error deleting class:', err.message);
+    }
+  };
   
   // Calculate stats dynamically
   const totalClasses = classes.length;
@@ -74,9 +88,27 @@ export default function Dashboard({ classes, onSelectClass, onOpenAddClass }) {
                     <span className="bg-surface-container-lowest px-3 py-1.5 text-on-surface-variant font-label-md text-label-md rounded font-semibold tracking-wider border border-outline-variant/30">
                       {cls.subjectCode}
                     </span>
-                    <span className="material-symbols-outlined text-primary opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-1 duration-200">
-                      arrow_forward
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); onEditClass(cls); }}
+                        className="opacity-0 group-hover:opacity-100 transition-all duration-200 text-primary hover:bg-primary/10 rounded p-1 flex items-center justify-center cursor-pointer"
+                        title="Edit class"
+                      >
+                        <span className="material-symbols-outlined text-[20px]">edit_square</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(e) => handleDeleteClass(e, cls.id)}
+                        className="opacity-0 group-hover:opacity-100 transition-all duration-200 text-[#ba1a1a] hover:bg-[#ba1a1a]/10 rounded p-1 flex items-center justify-center cursor-pointer"
+                        title="Delete class"
+                      >
+                        <span className="material-symbols-outlined text-[20px]">delete</span>
+                      </button>
+                      <span className="material-symbols-outlined text-primary opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-1 duration-200">
+                        arrow_forward
+                      </span>
+                    </div>
                   </div>
                   <h2 className="font-headline-md text-headline-md text-on-background font-bold line-clamp-2">
                     {cls.subjectName}

@@ -1,9 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-export default function AddClassModal({ isOpen, onClose, onAddClass }) {
+export default function AddClassModal({ isOpen, onClose, onAddClass, onUpdateClass, editingClass }) {
   const [subjectName, setSubjectName] = useState('');
   const [rollNumbersText, setRollNumbersText] = useState('');
   const [error, setError] = useState('');
+
+  // Pre-fill fields when opening in edit mode, clear them when opening fresh
+  useEffect(() => {
+    if (isOpen) {
+      if (editingClass) {
+        setSubjectName(editingClass.subjectName || '');
+        setRollNumbersText(
+          editingClass.student_roll_numbers ? editingClass.student_roll_numbers.join(', ') : ''
+        );
+      } else {
+        setSubjectName('');
+        setRollNumbersText('');
+      }
+      setError('');
+    }
+  }, [isOpen, editingClass]);
 
   if (!isOpen) return null;
 
@@ -32,10 +48,18 @@ export default function AddClassModal({ isOpen, onClose, onAddClass }) {
       return;
     }
 
-    onAddClass({
-      subjectName: subjectName.trim(),
-      student_roll_numbers,
-    });
+    if (editingClass) {
+      onUpdateClass({
+        ...editingClass,
+        subjectName: subjectName.trim(),
+        student_roll_numbers,
+      });
+    } else {
+      onAddClass({
+        subjectName: subjectName.trim(),
+        student_roll_numbers,
+      });
+    }
 
     // Reset fields and close
     setSubjectName('');
@@ -51,7 +75,7 @@ export default function AddClassModal({ isOpen, onClose, onAddClass }) {
       >
         <div className="flex justify-between items-start">
           <h2 className="font-headline-lg text-headline-lg text-on-surface font-bold">
-            Create New Class
+            {editingClass ? 'Edit Class' : 'Create New Class'}
           </h2>
           <button 
             onClick={onClose} 
@@ -110,7 +134,7 @@ export default function AddClassModal({ isOpen, onClose, onAddClass }) {
               onClick={handleSubmit}
               className="bg-[#10B981] text-white px-8 py-3 rounded-lg font-label-lg text-label-lg hover:bg-opacity-90 active:scale-95 transition-all cursor-pointer"
             >
-              Create Class
+              {editingClass ? 'Save Changes' : 'Create Class'}
             </button>
           </div>
         </div>

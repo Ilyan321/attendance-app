@@ -13,6 +13,7 @@ function App() {
   const [classes, setClasses] = useState([]);
   const [isAddClassOpen, setIsAddClassOpen] = useState(false);
   const [activeAttendanceClassId, setActiveAttendanceClassId] = useState(null);
+  const [editingClass, setEditingClass] = useState(null);
 
   // Monitor Supabase Authentication state
   useEffect(() => {
@@ -105,6 +106,30 @@ function App() {
     }
   };
 
+  // Update an existing class in database and local state
+  const handleUpdateClass = async ({ subjectName, student_roll_numbers, ...rest }) => {
+    if (!editingClass) return;
+    try {
+      const { error } = await supabase
+        .from('classes')
+        .update({ subjectName: subjectName.trim(), student_roll_numbers })
+        .eq('id', editingClass.id);
+      if (error) throw error;
+      setClasses((prev) =>
+        prev.map((cls) =>
+          cls.id === editingClass.id
+            ? { ...cls, subjectName: subjectName.trim(), student_roll_numbers }
+            : cls
+        )
+      );
+    } catch (err) {
+      console.error('Error updating class:', err.message);
+    } finally {
+      setEditingClass(null);
+      setIsAddClassOpen(false);
+    }
+  };
+
   // Save updated attendance details back to Supabase and state
   const handleSaveAttendance = async (classId, presentRollNumbers, topic) => {
     try {
@@ -172,7 +197,7 @@ function App() {
           <div className="flex items-center gap-4">
             <span className="font-headline-md text-headline-md font-bold text-on-surface flex items-center gap-2">
               <span className="material-symbols-outlined text-[28px] text-primary">school</span>
-              {session.user.email}
+              {session.user.user_metadata?.username || session.user.email}
             </span>
           </div>
 
@@ -236,6 +261,8 @@ function App() {
           classes={classes}
           onSelectClass={(id) => setActiveAttendanceClassId(id)}
           onOpenAddClass={() => setIsAddClassOpen(true)}
+          onDeleteClass={(id) => setClasses((prev) => prev.filter((cls) => cls.id !== id))}
+          onEditClass={(cls) => { setEditingClass(cls); setIsAddClassOpen(true); }}
         />
       </div>
 
@@ -288,8 +315,10 @@ function App() {
       {/* Modals */}
       <AddClassModal
         isOpen={isAddClassOpen}
-        onClose={() => setIsAddClassOpen(false)}
+        onClose={() => { setIsAddClassOpen(false); setEditingClass(null); }}
         onAddClass={handleAddClass}
+        onUpdateClass={handleUpdateClass}
+        editingClass={editingClass}
       />
 
       <AttendanceModal

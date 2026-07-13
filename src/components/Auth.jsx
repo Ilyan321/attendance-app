@@ -4,6 +4,7 @@ import supabase from './supabaseClient';
 export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -26,11 +27,13 @@ export default function Auth() {
         const { error: signUpError } = await supabase.auth.signUp({
           email: email.trim(),
           password,
+          options: { data: { username: username.trim() } },
         });
         if (signUpError) throw signUpError;
         setSuccess('Account created successfully! Please check your email for verification or sign in.');
         setIsSignUp(false);
         setPassword('');
+        setUsername('');
       } else {
         const { error: signInError } = await supabase.auth.signInWithPassword({
           email: email.trim(),
@@ -76,6 +79,22 @@ export default function Auth() {
 
         {/* Form Container (Standard div instead of form) */}
         <div className="flex flex-col gap-4">
+          {!isSignUp ? null : (
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[12px] font-bold text-[#374151] uppercase tracking-wider">
+                Username
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. mr_smith"
+                className="bg-[#F3F4F6] border-none text-[#111827] placeholder-[#9CA3AF] p-4 text-[14px] rounded outline-none focus:ring-2 focus:ring-[#10B981] transition-all"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                disabled={loading}
+              />
+            </div>
+          )}
+
           <div className="flex flex-col gap-1.5">
             <label className="text-[12px] font-bold text-[#374151] uppercase tracking-wider">
               Email Address
