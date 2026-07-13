@@ -66,14 +66,16 @@ export default function ScheduleModal({ isOpen, onClose }) {
     try {
       const { data, error } = await supabase
         .from('schedules')
-        .insert([{ title: newTitle.trim(), day_of_week: newDay, time: newTime.trim() }])
+        .insert({ title: newTitle.trim(), day_of_week: newDay, time: newTime.trim() })
         .select();
+      
       if (error) throw error;
+      
       if (data && data.length > 0) {
         setSchedules((prev) =>
           [...prev, data[0]].sort((a, b) => {
             const dayDiff = DAYS.indexOf(a.day_of_week) - DAYS.indexOf(b.day_of_week);
-            return dayDiff !== 0 ? dayDiff : a.time.localeCompare(b.time);
+            return dayDiff !== 0 ? dayDiff : (a.time || '').localeCompare(b.time || '');
           })
         );
       }
