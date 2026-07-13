@@ -66,6 +66,23 @@ export default function HistoryModal({ isOpen, onClose, classId, className, tota
 
   const sortIcon = sortDir === 'desc' ? 'arrow_downward' : sortDir === 'asc' ? 'arrow_upward' : 'unfold_more';
 
+  const handleDeleteSession = async (sessionId) => {
+    const confirmed = window.confirm(
+      'Are you sure you want to delete this entire attendance session? This will remove the record for all students.'
+    );
+    if (!confirmed) return;
+    try {
+      const { error } = await supabase
+        .from('attendance_records')
+        .delete()
+        .eq('id', sessionId);
+      if (error) throw error;
+      setHistoryData((prev) => prev.filter((s) => s.id !== sessionId));
+    } catch (err) {
+      console.error('Error deleting attendance session:', err.message);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/50 backdrop-blur-sm transition-all duration-300">
       <div
@@ -143,6 +160,14 @@ export default function HistoryModal({ isOpen, onClose, classId, className, tota
                       <div className="font-normal text-[11px] mt-0.5 text-on-surface-variant">
                         {formatDate(session.created_at)}
                       </div>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteSession(session.id)}
+                        className="mt-2 flex items-center justify-center mx-auto text-red-600 hover:text-red-800 hover:bg-red-50 rounded p-1.5 cursor-pointer transition-colors duration-200"
+                        title="Delete this session"
+                      >
+                        <span className="material-symbols-outlined text-[18px]">delete</span>
+                      </button>
                     </th>
                   ))}
                   {/* Attendance Rate column header — clickable to sort */}
