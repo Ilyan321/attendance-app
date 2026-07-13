@@ -5,6 +5,8 @@ export default function HistoryModal({ isOpen, onClose, classId, className, tota
   const [historyData, setHistoryData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  // 'desc' = highest first, 'asc' = lowest first, null = original roll-number order
+  const [sortDir, setSortDir] = useState(null);
 
   useEffect(() => {
     if (!isOpen || !classId) return;
@@ -38,6 +40,31 @@ export default function HistoryModal({ isOpen, onClose, classId, className, tota
     const d = new Date(isoString);
     return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
   };
+
+  // Pre-compute attendance rate for each roll number
+  const totalSessions = historyData.length;
+  const rateForRoll = (roll) => {
+    if (totalSessions === 0) return null;
+    const attended = historyData.filter(
+      (s) => Array.isArray(s.present_students) && s.present_students.includes(roll)
+    ).length;
+    return parseFloat(((attended / totalSessions) * 100).toFixed(1));
+  };
+
+  // Build rows array — sorted if the user has clicked the header, else original order
+  const baseRolls = totalRollNumbers || [];
+  const sortedRolls = sortDir
+    ? [...baseRolls].sort((a, b) => {
+        const ra = rateForRoll(a) ?? 0;
+        const rb = rateForRoll(b) ?? 0;
+        return sortDir === 'desc' ? rb - ra : ra - rb;
+      })
+    : baseRolls;
+
+  const toggleSort = () =>
+    setSortDir((prev) => (prev === 'desc' ? 'asc' : 'desc'));
+
+  const sortIcon = sortDir === 'desc' ? 'arrow_downward' : sortDir === 'asc' ? 'arrow_upward' : 'unfold_more';
 
   return (
     <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/50 backdrop-blur-sm transition-all duration-300">
@@ -118,36 +145,71 @@ export default function HistoryModal({ isOpen, onClose, classId, className, tota
                       </div>
                     </th>
                   ))}
+                  {/* Attendance Rate column header — clickable to sort */}
+                  <th
+                    className="text-center font-label-md text-label-md text-on-surface-variant uppercase tracking-wider py-3 px-4 border-b-2 border-outline-variant min-w-[140px] cursor-pointer select-none hover:bg-surface-container/60 transition-colors"
+                    onClick={toggleSort}
+                    title="Click to sort by attendance rate"
+                  >
+                    <div className="flex items-center justify-center gap-1">
+                      <span className="font-bold text-on-surface">Attendance Rate</span>
+                      <span className="material-symbols-outlined text-[16px] text-on-surface-variant">{sortIcon}</span>
+                    </div>
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                {(totalRollNumbers || []).map((roll, rowIdx) => (
-                  <tr
-                    key={roll}
-                    className={rowIdx % 2 === 0 ? 'bg-white' : 'bg-surface-container/40'}
-                  >
-                    <td className="py-3 px-4 font-label-md text-label-md text-on-surface font-semibold border-b border-outline-variant/30 whitespace-nowrap">
-                      {roll}
-                    </td>
-                    {historyData.map((session) => {
-                      const isPresent =
-                        Array.isArray(session.present_students) &&
-                        session.present_students.includes(roll);
-                      return (
-                        <td
-                          key={session.id}
-                          className="text-center py-3 px-4 border-b border-outline-variant/30 text-base"
-                        >
-                          {isPresent ? (
-                            <span title="Present">✅</span>
-                          ) : (
-                            <span title="Absent">❌</span>
-                          )}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                ))}
+                {sortedRolls.map((roll, rowIdx) => {
+                  const rate = rateForRoll(roll);
+                  const isAtRisk = rate !== null && rate < 75;
+                  return (
+                    <tr
+                      key={roll}
+                      className={rowIdx % 2 === 0 ? 'bg-white' : 'bg-surface-container/40'}
+                    >
+                      <td className="py-3 px-4 font-label-md text-label-md text-on-surface font-semibold border-b border-outline-variant/30 whitespace-nowrap">
+                        {roll}
+                      </td>
+                      {historyData.map((session) => {
+                        const isPresent =
+                          Array.isArray(session.present_students) &&
+                          session.present_students.includes(roll);
+                        return (
+                          <td
+                            key={session.id}
+                            className="text-center py-3 px-4 border-b border-outline-variant/30 text-base"
+                          >
+                            {isPresent ? (
+                              <span title="Present">✅</span>
+                            ) : (
+                              <span title="Absent">❌</span>
+                            )}
+                          </td>
+                        );
+                      })}
+                      {/* Attendance Rate cell */}
+                      <td className="text-center py-3 px-4 border-b border-outline-variant/30 whitespace-nowrap">
+                        {rate === null ? (
+                          <span className="text-on-surface-variant text-sm">—</span>
+                        ) : (
+                          <span
+                            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-sm font-bold ${
+                              isAtRisk
+                                ? 'bg-red-100 text-red-700'
+                                : 'bg-emerald-100 text-emerald-700'
+                            }`}
+                            title={isAtRisk ? 'Below 75% — at risk' : 'Attendance OK'}
+                          >
+                            {isAtRisk && (
+                              <span className="material-symbols-outlined text-[14px]">warning</span>
+                            )}
+                            {rate % 1 === 0 ? `${rate}%` : `${rate}%`}
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           )}
