@@ -1,7 +1,7 @@
 import React from 'react';
 import supabase from './supabaseClient';
 
-export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDeleteClass, onEditClass, onViewHistory }) {
+export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDeleteClass, onEditClass, onViewHistory, upcomingSchedules, onOpenSchedule }) {
   const hasClasses = classes.length > 0;
 
   const handleDeleteClass = async (e, classId) => {
@@ -139,24 +139,43 @@ export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDe
       {/* Spacer and Stats / Deadlines Footer */}
       <section className="mt-24 py-12 border-t border-outline-variant">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
-          {/* Upcoming Deadlines */}
+          {/* Upcoming Schedule Preview */}
           <div className="md:col-span-2 space-y-6">
-            <h3 className="font-headline-md text-headline-md text-on-surface font-bold">
-              Upcoming Deadlines
-            </h3>
+            <div className="flex items-center justify-between">
+              <h3 className="font-headline-md text-headline-md text-on-surface font-bold">
+                Upcoming Schedule
+              </h3>
+              <button
+                type="button"
+                onClick={onOpenSchedule}
+                className="flex items-center gap-1.5 text-primary font-semibold text-sm hover:bg-primary/10 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-[18px]">calendar_month</span>
+                View Full Schedule
+              </button>
+            </div>
             <div className="space-y-4">
-              <div className="flex justify-between items-center py-4 border-b border-outline-variant hover:bg-surface-container-low transition-colors px-2 cursor-pointer rounded-lg">
-                <span className="font-body-md text-body-md font-medium">Calculus Midterm Grading</span>
-                <span className="font-label-md text-label-md text-tertiary font-semibold bg-tertiary-fixed px-3 py-1 rounded">
-                  In 2 days
-                </span>
-              </div>
-              <div className="flex justify-between items-center py-4 border-b border-outline-variant hover:bg-surface-container-low transition-colors px-2 cursor-pointer rounded-lg">
-                <span className="font-body-md text-body-md font-medium">World History Essay Feedback</span>
-                <span className="font-label-md text-label-md text-on-surface-variant bg-surface-container px-3 py-1 rounded">
-                  Next Monday
-                </span>
-              </div>
+              {(!upcomingSchedules || upcomingSchedules.length === 0) ? (
+                <div className="flex items-center gap-3 text-on-surface-variant py-4 text-sm italic">
+                  <span className="material-symbols-outlined text-[20px]">event_busy</span>
+                  No upcoming schedule items. Add some via View Full Schedule.
+                </div>
+              ) : (
+                upcomingSchedules.slice(0, 2).map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex justify-between items-center py-4 border-b border-outline-variant hover:bg-surface-container-low transition-colors px-2 rounded-lg"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="material-symbols-outlined text-primary text-[20px]">schedule</span>
+                      <span className="font-body-md text-body-md font-medium">{item.title}</span>
+                    </div>
+                    <span className="font-label-md text-label-md text-on-surface-variant bg-surface-container px-3 py-1 rounded shrink-0">
+                      {item.day_of_week} · {item.time}
+                    </span>
+                  </div>
+                ))
+              )}
             </div>
           </div>
 

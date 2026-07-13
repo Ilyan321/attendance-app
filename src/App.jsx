@@ -3,6 +3,7 @@ import Dashboard from './components/Dashboard';
 import AddClassModal from './components/AddClassModal';
 import AttendanceModal from './components/AttendanceModal';
 import HistoryModal from './components/HistoryModal';
+import ScheduleModal from './components/ScheduleModal';
 import Auth from './components/Auth';
 import supabase from './components/supabaseClient';
 import './App.css';
@@ -17,6 +18,8 @@ function App() {
   const [editingClass, setEditingClass] = useState(null);
   const [historyModalOpen, setHistoryModalOpen] = useState(false);
   const [selectedHistoryClass, setSelectedHistoryClass] = useState(null);
+  const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
+  const [schedules, setSchedules] = useState([]);
 
   // Monitor Supabase Authentication state
   useEffect(() => {
@@ -63,6 +66,25 @@ function App() {
       setClasses([]);
     }
   }, [session, fetchClasses]);
+
+  // Fetch schedules when session is available
+  useEffect(() => {
+    if (!session?.user) { setSchedules([]); return; }
+    const fetchSchedules = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('schedules')
+          .select('*')
+          .order('day_of_week', { ascending: true })
+          .order('time', { ascending: true });
+        if (error) throw error;
+        setSchedules(data || []);
+      } catch (err) {
+        console.error('Error fetching schedules:', err.message);
+      }
+    };
+    fetchSchedules();
+  }, [session]);
 
   // Add a new class to database
   const handleAddClass = async ({ subjectName, student_roll_numbers }) => {
@@ -267,6 +289,8 @@ function App() {
           onDeleteClass={(id) => setClasses((prev) => prev.filter((cls) => cls.id !== id))}
           onEditClass={(cls) => { setEditingClass(cls); setIsAddClassOpen(true); }}
           onViewHistory={(cls) => { setSelectedHistoryClass(cls); setHistoryModalOpen(true); }}
+          upcomingSchedules={schedules}
+          onOpenSchedule={() => setScheduleModalOpen(true)}
         />
       </div>
 
@@ -303,7 +327,10 @@ function App() {
           <span className="material-symbols-outlined">dashboard</span>
           <span className="font-label-md text-label-md">Dashboard</span>
         </button>
-        <button className="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors cursor-pointer">
+        <button
+          className="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
+          onClick={() => setScheduleModalOpen(true)}
+        >
           <span className="material-symbols-outlined">calendar_today</span>
           <span className="font-label-md text-label-md">Schedule</span>
         </button>
@@ -338,6 +365,11 @@ function App() {
         classId={selectedHistoryClass?.id}
         className={selectedHistoryClass?.subjectName}
         totalRollNumbers={selectedHistoryClass?.student_roll_numbers}
+      />
+
+      <ScheduleModal
+        isOpen={scheduleModalOpen}
+        onClose={() => setScheduleModalOpen(false)}
       />
     </div>
   );
