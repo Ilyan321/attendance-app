@@ -13,6 +13,7 @@ function App() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
   const [classes, setClasses] = useState([]);
+  const [isLoadingClasses, setIsLoadingClasses] = useState(true);
   const [isAddClassOpen, setIsAddClassOpen] = useState(false);
   const [activeAttendanceClassId, setActiveAttendanceClassId] = useState(null);
   const [editingClass, setEditingClass] = useState(null);
@@ -43,7 +44,11 @@ function App() {
   }, []);
 
   const fetchClasses = useCallback(async () => {
-    if (!session?.user) return;
+    if (!session?.user) {
+      setIsLoadingClasses(false);
+      return;
+    }
+    setIsLoadingClasses(true);
     try {
       const { data, error } = await supabase
         .from('classes')
@@ -55,6 +60,8 @@ function App() {
       setClasses(data || []);
     } catch (err) {
       console.error('Error fetching classes:', err.message);
+    } finally {
+      setIsLoadingClasses(false);
     }
   }, [session]);
 
@@ -276,6 +283,7 @@ function App() {
           upcomingSchedules={schedules}
           onOpenSchedule={() => setScheduleModalOpen(true)}
           username={session.user.user_metadata?.username || session.user.email}
+          isLoading={isLoadingClasses}
         />
       </div>
 

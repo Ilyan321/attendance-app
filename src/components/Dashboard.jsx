@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import supabase from './supabaseClient';
 
-export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDeleteClass, onEditClass, onViewHistory, upcomingSchedules, onOpenSchedule, username }) {
+export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDeleteClass, onEditClass, onViewHistory, upcomingSchedules, onOpenSchedule, username, isLoading }) {
   const [activeDropdown, setActiveDropdown] = useState(null);
 
   useEffect(() => {
@@ -43,6 +43,59 @@ export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDe
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const today = days[new Date().getDay()];
   const classesToday = upcomingSchedules?.filter(s => s.day_of_week === today)?.length || 0;
+
+  if (isLoading) {
+    return (
+      <main className="max-w-[1440px] mx-auto p-12 mt-12 mb-24 animate-pulse">
+        {/* Skeleton Header */}
+        <div className="mb-8">
+          <div className="h-10 w-64 bg-gray-200 rounded-lg mb-4"></div>
+          <div className="h-6 w-40 bg-gray-200 rounded-lg"></div>
+        </div>
+
+        {/* Skeleton KPI Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="bg-surface-container border border-outline-variant/40 rounded-xl p-6 flex items-center gap-4 shadow-sm">
+              <div className="w-12 h-12 rounded-full bg-gray-200"></div>
+              <div>
+                <div className="h-4 w-24 bg-gray-200 rounded mb-2"></div>
+                <div className="h-6 w-16 bg-gray-200 rounded"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Skeleton Classes Header */}
+        <div className="flex justify-between items-center mb-4 mt-8">
+          <div className="h-8 w-32 bg-gray-200 rounded-lg"></div>
+          <div className="h-10 w-32 bg-gray-200 rounded-lg"></div>
+        </div>
+
+        {/* Skeleton Class Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="bg-surface-container p-8 min-h-[220px] rounded-xl flex flex-col justify-between border border-outline-variant/30">
+              <div>
+                <div className="flex justify-between items-start mb-4">
+                  <div className="h-6 w-16 bg-gray-200 rounded"></div>
+                  <div className="w-8 h-8 rounded-full bg-gray-200"></div>
+                </div>
+                <div className="h-6 w-3/4 bg-gray-200 rounded mb-2"></div>
+                <div className="flex gap-4 mt-4">
+                  <div className="h-4 w-12 bg-gray-200 rounded"></div>
+                  <div className="h-4 w-12 bg-gray-200 rounded"></div>
+                </div>
+              </div>
+              <div className="mt-6 pt-4 border-t border-outline-variant/30">
+                <div className="h-10 w-full bg-gray-200 rounded-lg"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="max-w-[1440px] mx-auto p-12 mt-12 mb-24">
