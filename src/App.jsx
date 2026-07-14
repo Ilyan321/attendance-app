@@ -292,11 +292,52 @@ function App() {
 
       {/* Footer */}
       <footer className="w-full mt-auto">
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center border-t border-gray-200 mt-12">
-          <p className="text-sm text-gray-500">© 2026 EduFocus. All rights reserved.</p>
-          <div className="flex space-x-6 text-sm text-gray-400 mt-4 md:mt-0">
-            <span>v1.0.0</span>
-            <span>Built by Team HACHOS</span>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          {/* Multi-Column Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+            {/* Column 1 (Brand) */}
+            <div>
+              <p className="text-lg font-bold text-gray-900">EduFocus</p>
+              <p className="text-sm text-gray-500 mt-4">Modern attendance tracking and academic session management.</p>
+            </div>
+            
+            {/* Column 2 (Product) */}
+            <div>
+              <p className="text-sm font-semibold text-gray-900">Product</p>
+              <div className="flex flex-col space-y-3 mt-4">
+                <span className="text-sm text-gray-500 hover:text-primary cursor-pointer">Dashboard</span>
+                <span className="text-sm text-gray-500 hover:text-primary cursor-pointer">Schedule</span>
+              </div>
+            </div>
+
+            {/* Column 3 (Resources) */}
+            <div>
+              <p className="text-sm font-semibold text-gray-900">Resources</p>
+              <div className="flex flex-col space-y-3 mt-4">
+                <span className="text-sm text-gray-500 hover:text-primary cursor-pointer">GitHub Repository</span>
+                <span className="text-sm text-gray-500 hover:text-primary cursor-pointer">Project Documentation</span>
+                <span className="text-sm text-gray-500 hover:text-primary cursor-pointer">Report an Issue</span>
+              </div>
+            </div>
+
+            {/* Column 4 (Developed By) */}
+            <div>
+              <p className="text-sm font-semibold text-gray-900">Developed By</p>
+              <div className="text-sm text-gray-400 font-medium space-y-2 flex flex-col mt-4">
+                <span>Ilyan Khan</span>
+                <span>Rameen Jalal</span>
+                <span>Zainab 15 April</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Line */}
+          <div className="flex flex-col md:flex-row justify-between items-center border-t border-gray-200 pt-6 mt-12">
+            <p className="text-sm text-gray-500">© 2026 EduFocus. All rights reserved.</p>
+            <div className="flex space-x-6 text-sm text-gray-400 mt-4 md:mt-0">
+              <span>v1.0.0</span>
+              <span>Built by team Seneca</span>
+            </div>
           </div>
         </div>
       </footer>
