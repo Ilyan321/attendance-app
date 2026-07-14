@@ -222,7 +222,7 @@ function App() {
           <div className="flex items-center gap-4">
             <span className="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
               <span className="material-symbols-outlined text-[28px] text-primary">school</span>
-              <span className="text-xl"><span className="font-bold">EduFocus</span> <span className="font-normal">Attendance Portal</span></span>
+              <span className="text-xl font-bold">EduFocus Attendance Portal</span>
             </span>
           </div>
 

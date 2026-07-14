@@ -47,11 +47,13 @@ export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDe
   return (
     <main className="max-w-[1440px] mx-auto p-12 mt-12 mb-24">
       {/* Semester Header */}
-      <div className="mb-6">
-        <p className="text-sm font-medium text-gray-500 mb-1">Welcome back, {username || 'User'} 👋</p>
-        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
-          Fall 2026 Overview
+      <div className="mb-8">
+        <h1 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight mb-2">
+          Welcome, <span className="text-primary">{username || 'User'}</span>
         </h1>
+        <p className="text-lg font-medium text-gray-500">
+          Fall 2026 Overview
+        </p>
       </div>
 
       {/* Global Stats Grid */}
