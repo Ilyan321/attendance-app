@@ -247,8 +247,11 @@ function App() {
               </button>
               <button 
                 type="button"
-                onClick={(e) => e.stopPropagation()}
-                className="text-on-surface-variant font-medium hover:bg-surface-container-low transition-colors duration-200 font-label-md text-label-md px-3 py-1 rounded cursor-pointer"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setScheduleModalOpen(true);
+                }}
+                className="text-on-surface-variant font-medium cursor-pointer hover:text-primary transition-colors duration-200 font-label-md text-label-md px-3 py-1 rounded"
               >
                 Schedule
               </button>
@@ -288,25 +291,12 @@ function App() {
       </div>
 
       {/* Footer */}
-      <footer className="w-full bg-surface-container border-t border-outline-variant py-8 px-12 mt-auto">
-        <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="font-headline-sm text-headline-sm text-primary font-bold flex items-center gap-2">
-            <span className="material-symbols-outlined">school</span>
-            EduFocus Portal
-          </div>
-          <div className="flex gap-8">
-            <a href="#" className="font-label-md text-label-md text-secondary hover:text-primary transition-colors duration-200">
-              Privacy Policy
-            </a>
-            <a href="#" className="font-label-md text-label-md text-secondary hover:text-primary transition-colors duration-200">
-              Support
-            </a>
-            <a href="#" className="font-label-md text-label-md text-secondary hover:text-primary transition-colors duration-200">
-              Terms of Service
-            </a>
-          </div>
-          <div className="font-label-md text-label-md text-secondary">
-            © 2026 EduFocus Portal. All rights reserved.
+      <footer className="w-full mt-auto">
+        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center border-t border-gray-200 mt-12">
+          <p className="text-sm text-gray-500">© 2026 EduFocus. All rights reserved.</p>
+          <div className="flex space-x-6 text-sm text-gray-400 mt-4 md:mt-0">
+            <span>v1.0.0</span>
+            <span>Built by Team HACHOS</span>
           </div>
         </div>
       </footer>
