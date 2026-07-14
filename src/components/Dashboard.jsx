@@ -47,16 +47,19 @@ export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDe
   return (
     <main className="max-w-[1440px] mx-auto p-12 mt-12 mb-24">
       {/* Semester Header */}
-      <header className="mb-8 flex justify-between items-end">
-        <div>
-          <h1 className="font-display text-display text-on-surface font-extrabold tracking-tight">
-            Current Semester
-          </h1>
-          <p className="font-body-lg text-body-lg text-on-surface-variant mt-2">
-            Managing {totalClasses} active {totalClasses === 1 ? 'section' : 'sections'} for Fall 2026
-          </p>
-        </div>
-      </header>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+          Fall 2026 Overview
+        </h1>
+        <button
+          type="button"
+          onClick={onOpenAddClass}
+          className="bg-primary-container text-on-primary px-6 py-2.5 rounded-lg font-label-lg text-label-lg hover:opacity-90 transition-opacity flex items-center gap-2 cursor-pointer shadow-md shadow-primary-container/25"
+        >
+          <span className="material-symbols-outlined text-[20px]">add</span>
+          Add Class
+        </button>
+      </div>
 
       {/* Global Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">

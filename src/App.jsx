@@ -245,13 +245,7 @@ function App() {
               >
                 Schedule
               </button>
-              <button 
-                type="button"
-                onClick={(e) => e.stopPropagation()}
-                className="text-on-surface-variant font-medium hover:bg-surface-container-low transition-colors duration-200 font-label-md text-label-md px-3 py-1 rounded cursor-pointer"
-              >
-                Settings
-              </button>
+
               <button 
                 type="button"
                 onClick={(e) => {
@@ -265,17 +259,7 @@ function App() {
               </button>
             </nav>
 
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsAddClassOpen(true);
-              }}
-              className="bg-primary-container text-on-primary px-6 py-2.5 rounded-lg font-label-lg text-label-lg hover:opacity-90 transition-opacity flex items-center gap-2 cursor-pointer shadow-md shadow-primary-container/25"
-            >
-              <span className="material-symbols-outlined text-[20px]">add</span>
-              Add Class
-            </button>
+
           </div>
         </div>
       </header>
