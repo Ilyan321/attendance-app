@@ -220,9 +220,9 @@ function App() {
       <header className="bg-surface-container-lowest border-b border-outline-variant sticky top-0 w-full z-40">
         <div className="flex justify-between items-center w-full px-12 py-4 max-w-[1440px] mx-auto">
           <div className="flex items-center gap-4">
-            <span className="font-headline-md text-headline-md font-bold text-on-surface flex items-center gap-2">
+            <span className="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
               <span className="material-symbols-outlined text-[28px] text-primary">school</span>
-              {session.user.user_metadata?.username || session.user.email}
+              <span className="text-xl"><span className="font-bold">EduFocus</span> <span className="font-normal">Attendance Portal</span></span>
             </span>
           </div>
 
@@ -275,6 +275,7 @@ function App() {
           onViewHistory={(cls) => { setSelectedHistoryClass(cls); setHistoryModalOpen(true); }}
           upcomingSchedules={schedules}
           onOpenSchedule={() => setScheduleModalOpen(true)}
+          username={session.user.user_metadata?.username || session.user.email}
         />
       </div>
 

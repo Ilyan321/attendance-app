@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import supabase from './supabaseClient';
 
-export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDeleteClass, onEditClass, onViewHistory, upcomingSchedules, onOpenSchedule }) {
+export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDeleteClass, onEditClass, onViewHistory, upcomingSchedules, onOpenSchedule, username }) {
   const [activeDropdown, setActiveDropdown] = useState(null);
 
   useEffect(() => {
@@ -48,6 +48,7 @@ export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDe
     <main className="max-w-[1440px] mx-auto p-12 mt-12 mb-24">
       {/* Semester Header */}
       <div className="mb-6">
+        <p className="text-sm font-medium text-gray-500 mb-1">Welcome back, {username || 'User'} 👋</p>
         <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
           Fall 2026 Overview
         </h1>
