@@ -291,10 +291,10 @@ function App() {
       </div>
 
       {/* Footer */}
-      <footer className="w-full mt-auto">
+      <footer className="w-full mt-auto pb-24 md:pb-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           {/* Multi-Column Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-y-10 md:gap-8 mb-12">
             {/* Column 1 (Brand) */}
             <div>
               <p className="text-lg font-bold text-gray-900">EduFocus</p>
@@ -332,7 +332,7 @@ function App() {
           </div>
 
           {/* Bottom Line */}
-          <div className="flex flex-col md:flex-row justify-between items-center border-t border-gray-200 pt-6 mt-12">
+          <div className="flex flex-col md:flex-row justify-between items-center border-t border-gray-200 pt-6 mt-8 md:mt-12 gap-4 md:gap-0 text-center md:text-left">
             <p className="text-sm text-gray-500">© 2026 EduFocus. All rights reserved.</p>
             <div className="flex space-x-6 text-sm text-gray-400 mt-4 md:mt-0">
               <span>v1.0.0</span>
