@@ -36,9 +36,8 @@ export default function Auth() {
     <div className="min-h-screen w-full flex flex-col items-center justify-center bg-background relative font-geist">
       {/* Enterprise Branding Header */}
       <div className="absolute top-6 left-6 md:top-8 md:left-10 z-20 select-none">
-        <h2 className="text-[22px] tracking-tight">
-          <span className="font-bold text-primary">EduFocus</span>
-          <span className="font-medium text-secondary ml-1.5">Attendance Portal</span>
+        <h2 className="text-[22px] tracking-tight font-bold text-primary-container">
+          EduFocus Attendance Portal
         </h2>
       </div>
 
