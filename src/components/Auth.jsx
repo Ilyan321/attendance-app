@@ -35,11 +35,16 @@ export default function Auth() {
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center bg-background relative font-geist">
       {/* Enterprise Branding Header */}
-      <div className="absolute top-6 left-6 md:top-8 md:left-10 z-20 select-none">
-        <h2 className="text-[22px] tracking-tight font-bold text-primary-container">
-          EduFocus Attendance Portal
-        </h2>
-      </div>
+      <header className="absolute top-0 left-0 w-full z-20 select-none border-b border-surface-container-highest bg-background">
+        <div className="px-6 py-5 md:px-10 flex items-center gap-2.5">
+          <span className="material-symbols-outlined text-[26px] text-primary-container">
+            school
+          </span>
+          <h2 className="text-[20px] tracking-tight font-bold text-primary-container">
+            EduFocus Attendance Portal
+          </h2>
+        </div>
+      </header>
 
       {/* Grid Pattern Background */}
       <div 
