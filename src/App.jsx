@@ -285,7 +285,7 @@ function App() {
           onViewHistory={(cls) => { setSelectedHistoryClass(cls); setHistoryModalOpen(true); }}
           upcomingSchedules={schedules}
           onOpenSchedule={() => setScheduleModalOpen(true)}
-          username={session.user.user_metadata?.username || session.user.email}
+          user={session.user}
           isLoading={isLoadingClasses}
         />
       </div>

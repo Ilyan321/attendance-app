@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import supabase from './supabaseClient';
 
-export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDeleteClass, onEditClass, onViewHistory, upcomingSchedules, onOpenSchedule, username, isLoading }) {
+export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDeleteClass, onEditClass, onViewHistory, upcomingSchedules, onOpenSchedule, user, isLoading }) {
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const username = user?.user_metadata?.username || 'Student';
 
   useEffect(() => {
     const handleClickOutside = () => setActiveDropdown(null);
@@ -102,7 +103,7 @@ export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDe
       {/* Semester Header */}
       <div className="mb-8">
         <h1 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight mb-2">
-          Welcome, <span className="text-primary">{username || 'User'}</span>
+          Welcome back, <span className="text-primary">{username}</span>
         </h1>
         <p className="text-lg font-medium text-gray-500">
           Fall 2026 Overview
