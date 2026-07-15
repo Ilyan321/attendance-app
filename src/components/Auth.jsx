@@ -4,8 +4,7 @@ import supabase from './supabaseClient';
 export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
-  const [isSignUp, setIsSignUp] = useState(false);
+
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
@@ -23,24 +22,11 @@ export default function Auth() {
     }
 
     try {
-      if (isSignUp) {
-        const { error: signUpError } = await supabase.auth.signUp({
-          email: email.trim(),
-          password,
-          options: { data: { username: username.trim() } },
-        });
-        if (signUpError) throw signUpError;
-        setSuccess('Account created successfully! Please check your email for verification or sign in.');
-        setIsSignUp(false);
-        setPassword('');
-        setUsername('');
-      } else {
-        const { error: signInError } = await supabase.auth.signInWithPassword({
-          email: email.trim(),
-          password,
-        });
-        if (signInError) throw signInError;
-      }
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      });
+      if (signInError) throw signInError;
     } catch (err) {
       setError(err.message || 'An error occurred during authentication.');
     } finally {
@@ -57,11 +43,8 @@ export default function Auth() {
             school
           </span>
           <h1 className="text-[24px] font-black text-[#111827] tracking-tight">
-            EduFocus Portal
+            System Access
           </h1>
-          <p className="text-[14px] text-[#6B7280]">
-            {isSignUp ? 'Create your teacher account' : 'Sign in to your teacher portal'}
-          </p>
         </div>
 
         {/* Success/Error Alerts */}
@@ -79,22 +62,6 @@ export default function Auth() {
 
         {/* Form Container (Standard div instead of form) */}
         <div className="flex flex-col gap-4">
-          {!isSignUp ? null : (
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[12px] font-bold text-[#374151] uppercase tracking-wider">
-                Username
-              </label>
-              <input
-                type="text"
-                placeholder="e.g. mr_smith"
-                className="bg-[#F3F4F6] border-none text-[#111827] placeholder-[#9CA3AF] p-4 text-[14px] rounded outline-none focus:ring-2 focus:ring-[#10B981] transition-all"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                disabled={loading}
-              />
-            </div>
-          )}
-
           <div className="flex flex-col gap-1.5">
             <label className="text-[12px] font-bold text-[#374151] uppercase tracking-wider">
               Email Address
@@ -131,24 +98,11 @@ export default function Auth() {
             disabled={loading}
             className="w-full bg-[#10B981] text-white p-4 text-[14px] font-bold rounded hover:bg-opacity-90 active:scale-98 transition-all cursor-pointer flex justify-center items-center"
           >
-            {loading ? 'Processing...' : isSignUp ? 'Create Account' : 'Sign In'}
+            {loading ? 'Processing...' : 'Sign In'}
           </button>
         </div>
 
-        {/* Toggle */}
-        <div className="text-center pt-4 border-t border-[#F3F4F6]">
-          <button
-            type="button"
-            onClick={() => {
-              setIsSignUp(!isSignUp);
-              setError('');
-              setSuccess('');
-            }}
-            className="text-[14px] text-[#4B5563] hover:text-[#10B981] font-semibold transition-colors cursor-pointer"
-          >
-            {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Create Account"}
-          </button>
-        </div>
+
       </div>
     </div>
   );
