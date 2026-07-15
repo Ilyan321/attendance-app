@@ -35,8 +35,8 @@ export default function Auth() {
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center bg-background relative font-geist">
       {/* Enterprise Branding Header */}
-      <header className="absolute top-0 left-0 w-full z-20 select-none border-b border-surface-container-highest bg-background">
-        <div className="px-6 py-5 md:px-10 flex items-center gap-2.5">
+      <header className="absolute top-0 left-0 w-full h-[80px] z-20 select-none border-b border-surface-container-highest bg-background flex items-center">
+        <div className="px-6 md:px-10 flex items-center gap-2.5">
           <span className="material-symbols-outlined text-[26px] text-primary-container">
             school
           </span>
