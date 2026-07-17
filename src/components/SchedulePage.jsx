@@ -92,7 +92,7 @@ export default function SchedulePage() {
   };
 
   return (
-    <main className="max-w-[1440px] mx-auto p-12 mt-12 mb-24">
+    <main className="max-w-[1440px] mx-auto p-12 mt-4 mb-24">
       {/* Page Header */}
       <div className="mb-8">
         <button
