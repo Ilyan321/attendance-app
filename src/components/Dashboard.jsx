@@ -3,7 +3,7 @@ import supabase from './supabaseClient';
 
 export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDeleteClass, onEditClass, onViewHistory, upcomingSchedules, onOpenSchedule, user, isLoading }) {
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const username = user?.user_metadata?.username || 'Student';
+  const username = user?.user_metadata?.username || 'Teacher';
 
   useEffect(() => {
     const handleClickOutside = () => setActiveDropdown(null);

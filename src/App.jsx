@@ -4,6 +4,7 @@ import AddClassModal from './components/AddClassModal';
 import AttendanceModal from './components/AttendanceModal';
 import HistoryModal from './components/HistoryModal';
 import ScheduleModal from './components/ScheduleModal';
+import SettingsModal from './components/SettingsModal';
 import Auth from './components/Auth';
 import supabase from './components/supabaseClient';
 import './App.css';
@@ -20,7 +21,14 @@ function App() {
   const [historyModalOpen, setHistoryModalOpen] = useState(false);
   const [selectedHistoryClass, setSelectedHistoryClass] = useState(null);
   const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
+  const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [schedules, setSchedules] = useState([]);
+
+  // Callback from SettingsModal — patches session in-place so the new
+  // username propagates everywhere without a hard refresh.
+  const handleUserUpdate = useCallback((updatedUser) => {
+    setSession((prev) => (prev ? { ...prev, user: updatedUser } : prev));
+  }, []);
 
   // Monitor Supabase Authentication state
   useEffect(() => {
@@ -260,6 +268,17 @@ function App() {
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
+                  setSettingsModalOpen(true);
+                }}
+                className="text-on-surface-variant font-medium cursor-pointer hover:text-primary transition-colors duration-200 font-label-md text-label-md px-3 py-1 rounded"
+              >
+                Settings
+              </button>
+
+              <button 
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
                   supabase.auth.signOut();
                 }}
                 className="text-[#ba1a1a] hover:bg-[#ba1a1a]/10 transition-colors duration-200 font-label-md text-label-md px-3 py-1 rounded cursor-pointer flex items-center gap-1 font-bold"
@@ -358,6 +377,13 @@ function App() {
           <span className="material-symbols-outlined">calendar_today</span>
           <span className="font-label-md text-label-md">Schedule</span>
         </button>
+        <button
+          className="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
+          onClick={() => setSettingsModalOpen(true)}
+        >
+          <span className="material-symbols-outlined">settings</span>
+          <span className="font-label-md text-label-md">Settings</span>
+        </button>
         <button 
           onClick={() => supabase.auth.signOut()}
           className="flex flex-col items-center justify-center text-[#ba1a1a] hover:opacity-85 transition-opacity cursor-pointer"
@@ -394,6 +420,13 @@ function App() {
       <ScheduleModal
         isOpen={scheduleModalOpen}
         onClose={() => setScheduleModalOpen(false)}
+      />
+
+      <SettingsModal
+        isOpen={settingsModalOpen}
+        onClose={() => setSettingsModalOpen(false)}
+        user={session?.user}
+        onUserUpdate={handleUserUpdate}
       />
     </div>
   );
