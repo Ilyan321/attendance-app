@@ -1,15 +1,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import AddClassModal from './components/AddClassModal';
 import AttendanceModal from './components/AttendanceModal';
 import HistoryModal from './components/HistoryModal';
-import ScheduleModal from './components/ScheduleModal';
+import SchedulePage from './components/SchedulePage';
 import SettingsModal from './components/SettingsModal';
 import Auth from './components/Auth';
 import supabase from './components/supabaseClient';
 import './App.css';
 
 function App() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   // Global State
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -20,7 +24,6 @@ function App() {
   const [editingClass, setEditingClass] = useState(null);
   const [historyModalOpen, setHistoryModalOpen] = useState(false);
   const [selectedHistoryClass, setSelectedHistoryClass] = useState(null);
-  const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [schedules, setSchedules] = useState([]);
 
@@ -248,8 +251,13 @@ function App() {
                 onClick={(e) => {
                   e.stopPropagation();
                   setActiveAttendanceClassId(null);
+                  navigate('/');
                 }}
-                className="text-primary font-bold border-b-2 border-primary pb-1 font-label-md text-label-md cursor-pointer"
+                className={`font-label-md text-label-md cursor-pointer transition-colors duration-200 ${
+                  location.pathname === '/'
+                    ? 'text-primary font-bold border-b-2 border-primary pb-1'
+                    : 'text-on-surface-variant font-medium hover:text-primary px-3 py-1 rounded'
+                }`}
               >
                 Dashboard
               </button>
@@ -257,9 +265,13 @@ function App() {
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setScheduleModalOpen(true);
+                  navigate('/schedule');
                 }}
-                className="text-on-surface-variant font-medium cursor-pointer hover:text-primary transition-colors duration-200 font-label-md text-label-md px-3 py-1 rounded"
+                className={`font-label-md text-label-md cursor-pointer transition-colors duration-200 ${
+                  location.pathname === '/schedule'
+                    ? 'text-primary font-bold border-b-2 border-primary pb-1'
+                    : 'text-on-surface-variant font-medium hover:text-primary px-3 py-1 rounded'
+                }`}
               >
                 Schedule
               </button>
@@ -295,18 +307,23 @@ function App() {
 
       {/* Main Content Area */}
       <div className="flex-grow pb-16">
-        <Dashboard
-          classes={classes}
-          onSelectClass={(id) => setActiveAttendanceClassId(id)}
-          onOpenAddClass={() => setIsAddClassOpen(true)}
-          onDeleteClass={(id) => setClasses((prev) => prev.filter((cls) => cls.id !== id))}
-          onEditClass={(cls) => { setEditingClass(cls); setIsAddClassOpen(true); }}
-          onViewHistory={(cls) => { setSelectedHistoryClass(cls); setHistoryModalOpen(true); }}
-          upcomingSchedules={schedules}
-          onOpenSchedule={() => setScheduleModalOpen(true)}
-          user={session.user}
-          isLoading={isLoadingClasses}
-        />
+        <Routes>
+          <Route path="/" element={
+            <Dashboard
+              classes={classes}
+              onSelectClass={(id) => setActiveAttendanceClassId(id)}
+              onOpenAddClass={() => setIsAddClassOpen(true)}
+              onDeleteClass={(id) => setClasses((prev) => prev.filter((cls) => cls.id !== id))}
+              onEditClass={(cls) => { setEditingClass(cls); setIsAddClassOpen(true); }}
+              onViewHistory={(cls) => { setSelectedHistoryClass(cls); setHistoryModalOpen(true); }}
+              upcomingSchedules={schedules}
+              onOpenSchedule={() => navigate('/schedule')}
+              user={session.user}
+              isLoading={isLoadingClasses}
+            />
+          } />
+          <Route path="/schedule" element={<SchedulePage />} />
+        </Routes>
       </div>
 
       {/* Footer */}
@@ -364,15 +381,23 @@ function App() {
       {/* Mobile Navigation Bar */}
       <nav className="fixed bottom-0 w-full z-40 flex justify-around items-center bg-surface-container-lowest py-3 border-t border-outline-variant md:hidden shadow-lg">
         <button 
-          onClick={() => setActiveAttendanceClassId(null)}
-          className="flex flex-col items-center justify-center text-primary font-bold cursor-pointer"
+          onClick={() => { setActiveAttendanceClassId(null); navigate('/'); }}
+          className={`flex flex-col items-center justify-center cursor-pointer ${
+            location.pathname === '/'
+              ? 'text-primary font-bold'
+              : 'text-on-surface-variant hover:text-primary transition-colors'
+          }`}
         >
           <span className="material-symbols-outlined">dashboard</span>
           <span className="font-label-md text-label-md">Dashboard</span>
         </button>
         <button
-          className="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
-          onClick={() => setScheduleModalOpen(true)}
+          className={`flex flex-col items-center justify-center transition-colors cursor-pointer ${
+            location.pathname === '/schedule'
+              ? 'text-primary font-bold'
+              : 'text-on-surface-variant hover:text-primary'
+          }`}
+          onClick={() => navigate('/schedule')}
         >
           <span className="material-symbols-outlined">calendar_today</span>
           <span className="font-label-md text-label-md">Schedule</span>
@@ -417,10 +442,6 @@ function App() {
         totalRollNumbers={selectedHistoryClass?.student_roll_numbers}
       />
 
-      <ScheduleModal
-        isOpen={scheduleModalOpen}
-        onClose={() => setScheduleModalOpen(false)}
-      />
 
       <SettingsModal
         isOpen={settingsModalOpen}
