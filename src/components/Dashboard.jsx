@@ -185,7 +185,7 @@ export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDe
             </button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 animate-in fade-in slide-in-from-bottom-4 duration-300">
-            {classes.map((cls) => {
+            {classes.map((cls, index) => {
             const numStudents = cls.student_roll_numbers ? cls.student_roll_numbers.length : 0;
             const hasTakenAttendance = cls.presentStudents && cls.presentStudents.length > 0 || cls.attendanceTopic;
             
@@ -209,7 +209,7 @@ export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDe
                 <div>
                   <div className="flex justify-between items-start mb-4">
                     <span className="bg-surface-container-lowest px-3 py-1.5 text-on-surface-variant font-label-md text-label-md rounded font-semibold tracking-wider border border-outline-variant/30">
-                      {cls.subjectCode}
+                      #{String(index + 1).padStart(2, '0')}
                     </span>
                     <div className="relative">
                       <button
