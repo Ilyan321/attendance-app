@@ -111,11 +111,53 @@ export default function SchedulePage() {
         </h1>
       </div>
 
-      {/* Loading State */}
+      {/* Loading Skeleton */}
       {loading && (
-        <div className="flex items-center justify-center h-40 gap-3 text-primary font-semibold">
-          <span className="material-symbols-outlined animate-spin text-[24px]">sync</span>
-          Loading schedule...
+        <div className="space-y-8 animate-pulse">
+          {/* Skeleton Day Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            {DAYS.map((day) => {
+              const colors = DAY_COLORS[day];
+              return (
+                <div
+                  key={day}
+                  className={`${colors.bg} ${colors.border} border rounded-xl p-4 flex flex-col gap-3 min-h-[160px]`}
+                >
+                  <div className="h-5 w-20 bg-gray-200 rounded self-start" />
+                  <div className="bg-white rounded-lg px-3 py-2.5 shadow-sm border border-white/80 flex flex-col gap-2">
+                    <div className="h-4 w-3/4 bg-gray-200 rounded" />
+                    <div className="h-3 w-1/2 bg-gray-200 rounded" />
+                  </div>
+                  <div className="bg-white rounded-lg px-3 py-2.5 shadow-sm border border-white/80 flex flex-col gap-2">
+                    <div className="h-4 w-2/3 bg-gray-200 rounded" />
+                    <div className="h-3 w-1/3 bg-gray-200 rounded" />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Skeleton Add Form */}
+          <div className="bg-surface-container rounded-xl border border-outline-variant/40 p-6">
+            <div className="h-6 w-48 bg-gray-200 rounded mb-4" />
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="flex flex-col gap-1.5">
+                <div className="h-3 w-12 bg-gray-200 rounded" />
+                <div className="h-10 w-full bg-gray-200 rounded-lg" />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <div className="h-3 w-8 bg-gray-200 rounded" />
+                <div className="h-10 w-full bg-gray-200 rounded-lg" />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <div className="h-3 w-10 bg-gray-200 rounded" />
+                <div className="h-10 w-full bg-gray-200 rounded-lg" />
+              </div>
+            </div>
+            <div className="mt-5 flex justify-end">
+              <div className="h-10 w-40 bg-gray-200 rounded-lg" />
+            </div>
+          </div>
         </div>
       )}
 
