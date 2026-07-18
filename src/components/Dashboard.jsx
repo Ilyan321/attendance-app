@@ -112,7 +112,7 @@ export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDe
       {/* Semester Header */}
       <div className="mb-8">
         <h1 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight mb-2">
-          Welcome back, <span className="text-primary">{username}</span>
+          Welcome, <span className="text-primary">{username}</span>
         </h1>
         <p className="text-lg font-medium text-gray-500">
           Fall 2026 Overview
