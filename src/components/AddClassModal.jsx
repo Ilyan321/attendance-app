@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 export default function AddClassModal({ isOpen, onClose, onAddClass, onUpdateClass, editingClass }) {
   const [subjectName, setSubjectName] = useState('');
+  const [department, setDepartment] = useState('');
   const [rollNumbersText, setRollNumbersText] = useState('');
   const [error, setError] = useState('');
 
@@ -10,11 +11,13 @@ export default function AddClassModal({ isOpen, onClose, onAddClass, onUpdateCla
     if (isOpen) {
       if (editingClass) {
         setSubjectName(editingClass.subjectName || '');
+        setDepartment(editingClass.department || '');
         setRollNumbersText(
           editingClass.student_roll_numbers ? editingClass.student_roll_numbers.join(', ') : ''
         );
       } else {
         setSubjectName('');
+        setDepartment('');
         setRollNumbersText('');
       }
       setError('');
@@ -29,6 +32,11 @@ export default function AddClassModal({ isOpen, onClose, onAddClass, onUpdateCla
 
     if (!subjectName.trim()) {
       setError('Subject Name is required.');
+      return;
+    }
+
+    if (!department.trim()) {
+      setError('Department is required.');
       return;
     }
 
@@ -52,17 +60,20 @@ export default function AddClassModal({ isOpen, onClose, onAddClass, onUpdateCla
       onUpdateClass({
         ...editingClass,
         subjectName: subjectName.trim(),
+        department: department.trim(),
         student_roll_numbers,
       });
     } else {
       onAddClass({
         subjectName: subjectName.trim(),
+        department: department.trim(),
         student_roll_numbers,
       });
     }
 
     // Reset fields and close
     setSubjectName('');
+    setDepartment('');
     setRollNumbersText('');
     onClose();
   };
@@ -105,6 +116,19 @@ export default function AddClassModal({ isOpen, onClose, onAddClass, onUpdateCla
               type="text"
               value={subjectName}
               onChange={(e) => setSubjectName(e.target.value)}
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label className="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">
+              Department
+            </label>
+            <input
+              className="bg-[#F3F4F6] border-none p-4 font-body-md focus:ring-2 focus:ring-primary-container rounded-lg outline-none text-on-surface"
+              placeholder="e.g. Computer Science"
+              type="text"
+              value={department}
+              onChange={(e) => setDepartment(e.target.value)}
             />
           </div>
 

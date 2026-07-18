@@ -105,7 +105,7 @@ function App() {
   }, [session]);
 
   // Add a new class to database
-  const handleAddClass = async ({ subjectName, student_roll_numbers }) => {
+  const handleAddClass = async ({ subjectName, department, student_roll_numbers }) => {
     if (!session?.user) return;
 
     // Generate a clean subject/course code (e.g. "Advanced Mathematics" -> "ADV-MAT")
@@ -124,6 +124,7 @@ function App() {
     const newClass = {
       teacher_id: session.user.id,
       subjectName: subjectName.trim(),
+      department: department.trim(),
       subjectCode: generateCode(subjectName),
       student_roll_numbers,
       presentStudents: [], // Initialize present students as empty
@@ -150,18 +151,18 @@ function App() {
   };
 
   // Update an existing class in database and local state
-  const handleUpdateClass = async ({ subjectName, student_roll_numbers, ...rest }) => {
+  const handleUpdateClass = async ({ subjectName, department, student_roll_numbers, ...rest }) => {
     if (!editingClass) return;
     try {
       const { error } = await supabase
         .from('classes')
-        .update({ subjectName: subjectName.trim(), student_roll_numbers })
+        .update({ subjectName: subjectName.trim(), department: department.trim(), student_roll_numbers })
         .eq('id', editingClass.id);
       if (error) throw error;
       setClasses((prev) =>
         prev.map((cls) =>
           cls.id === editingClass.id
-            ? { ...cls, subjectName: subjectName.trim(), student_roll_numbers }
+            ? { ...cls, subjectName: subjectName.trim(), department: department.trim(), student_roll_numbers }
             : cls
         )
       );

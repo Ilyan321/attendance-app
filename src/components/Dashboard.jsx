@@ -248,6 +248,11 @@ export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDe
                   <h2 className="font-headline-md text-headline-md text-on-background font-bold line-clamp-2">
                     {cls.subjectName}
                   </h2>
+                  {cls.department && (
+                    <p className="text-sm font-medium text-primary mt-1">
+                      {cls.department}
+                    </p>
+                  )}
                   <div className="text-sm text-gray-500 flex gap-4 mt-2">
                     <div className="flex items-center gap-1">
                       <span className="material-symbols-outlined text-[16px]">person</span>
