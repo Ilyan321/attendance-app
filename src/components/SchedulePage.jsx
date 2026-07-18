@@ -195,7 +195,7 @@ export default function SchedulePage() {
                   </span>
 
                   {daySessions.length === 0 ? (
-                    <p className="text-xs text-on-surface-variant/60 italic mt-2">No sessions</p>
+                    <p className="text-xs text-on-surface-variant/60 italic mt-2">No Classes</p>
                   ) : (
                     daySessions.map((session) => (
                       <div

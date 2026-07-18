@@ -228,7 +228,7 @@ function App() {
       <div className="min-h-screen flex items-center justify-center bg-[#FFFFFF] font-geist">
         <div className="text-[16px] font-bold text-[#10B981] flex items-center gap-2">
           <span className="material-symbols-outlined animate-spin text-[24px]">sync</span>
-          Loading Session...
+          Loading Class...
         </div>
       </div>
     );
@@ -351,7 +351,7 @@ function App() {
                 <span className="text-2xl font-black tracking-tight">EduFocus</span>
               </span>
               <p className="text-on-surface-variant font-body-lg text-lg max-w-sm leading-relaxed">
-                Modern attendance tracking and academic session management, designed for the next generation of educators.
+                Modern attendance tracking and academic Class management, designed for the next generation of educators.
               </p>
             </div>
 

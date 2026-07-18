@@ -168,7 +168,7 @@ export default function HistoryModal({ isOpen, onClose, classId, className, tota
               {className}
             </h2>
             <p className="text-sm text-on-surface-variant mt-1">
-              {historyData.length} session{historyData.length !== 1 ? 's' : ''} recorded
+              {historyData.length} Class{historyData.length !== 1 ? 'es' : ''} recorded
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -213,7 +213,7 @@ export default function HistoryModal({ isOpen, onClose, classId, className, tota
                 event_busy
               </span>
               <p className="font-headline-sm text-headline-sm text-on-surface-variant font-semibold">
-                No attendance sessions recorded yet.
+                No attendance Classes recorded yet.
               </p>
               <p className="font-body-md text-on-surface-variant max-w-sm">
                 Take attendance for this class to see history here.
@@ -245,7 +245,7 @@ export default function HistoryModal({ isOpen, onClose, classId, className, tota
                         type="button"
                         onClick={() => handleDeleteSession(session.id)}
                         className="mt-2 flex items-center justify-center mx-auto text-red-600 hover:text-red-800 hover:bg-red-50 rounded p-1.5 cursor-pointer transition-colors duration-200"
-                        title="Delete this session"
+                        title="Delete this Class"
                       >
                         <span className="material-symbols-outlined text-[18px]">delete</span>
                       </button>
@@ -335,8 +335,8 @@ export default function HistoryModal({ isOpen, onClose, classId, className, tota
 
       <ConfirmModal
         isOpen={!!sessionToDelete}
-        title="Delete Attendance Session"
-        message="Are you sure you want to delete this entire attendance session? This will remove the record for all students and cannot be undone."
+        title="Delete Attendance Class"
+        message="Are you sure you want to delete this entire attendance Class? This action cannot be undone."
         onConfirm={executeDeleteSession}
         onCancel={() => setSessionToDelete(null)}
       />

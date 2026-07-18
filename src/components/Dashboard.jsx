@@ -207,7 +207,7 @@ export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDe
                 attendanceHealth = `${((present / numStudents) * 100).toFixed(1)}%`;
               }
             } else {
-              attendanceHealth = 'No sessions yet';
+              attendanceHealth = 'No Classes yet';
             }
             
             return (
