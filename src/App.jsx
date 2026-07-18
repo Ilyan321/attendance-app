@@ -5,7 +5,7 @@ import AddClassModal from './components/AddClassModal';
 import AttendanceModal from './components/AttendanceModal';
 import HistoryModal from './components/HistoryModal';
 import SchedulePage from './components/SchedulePage';
-import SettingsModal from './components/SettingsModal';
+import SettingsPage from './components/SettingsPage';
 import Auth from './components/Auth';
 import supabase from './components/supabaseClient';
 import './App.css';
@@ -24,7 +24,6 @@ function App() {
   const [editingClass, setEditingClass] = useState(null);
   const [historyModalOpen, setHistoryModalOpen] = useState(false);
   const [selectedHistoryClass, setSelectedHistoryClass] = useState(null);
-  const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [schedules, setSchedules] = useState([]);
 
   // Callback from SettingsModal — patches session in-place so the new
@@ -282,9 +281,13 @@ function App() {
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setSettingsModalOpen(true);
+                  navigate('/settings');
                 }}
-                className="text-on-surface-variant font-medium cursor-pointer hover:text-primary transition-colors duration-200 font-label-md text-label-md px-3 py-1 rounded"
+                className={`font-label-md text-label-md cursor-pointer transition-colors duration-200 ${
+                  location.pathname === '/settings'
+                    ? 'text-primary font-bold border-b-2 border-primary pb-1'
+                    : 'text-on-surface-variant font-medium hover:text-primary px-3 py-1 rounded'
+                }`}
               >
                 Settings
               </button>
@@ -325,6 +328,7 @@ function App() {
             />
           } />
           <Route path="/schedule" element={<SchedulePage />} />
+          <Route path="/settings" element={<SettingsPage user={session.user} onUserUpdate={handleUserUpdate} />} />
         </Routes>
       </div>
 
@@ -405,8 +409,12 @@ function App() {
           <span className="font-label-md text-label-md">Schedule</span>
         </button>
         <button
-          className="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
-          onClick={() => setSettingsModalOpen(true)}
+          className={`flex flex-col items-center justify-center transition-colors cursor-pointer ${
+            location.pathname === '/settings'
+              ? 'text-primary font-bold'
+              : 'text-on-surface-variant hover:text-primary'
+          }`}
+          onClick={() => navigate('/settings')}
         >
           <span className="material-symbols-outlined">settings</span>
           <span className="font-label-md text-label-md">Settings</span>
@@ -442,14 +450,6 @@ function App() {
         classId={selectedHistoryClass?.id}
         className={selectedHistoryClass?.subjectName}
         totalRollNumbers={selectedHistoryClass?.student_roll_numbers}
-      />
-
-
-      <SettingsModal
-        isOpen={settingsModalOpen}
-        onClose={() => setSettingsModalOpen(false)}
-        user={session?.user}
-        onUserUpdate={handleUserUpdate}
       />
     </div>
   );
