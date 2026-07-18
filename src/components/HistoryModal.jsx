@@ -92,19 +92,50 @@ export default function HistoryModal({ isOpen, onClose, classId, className, tota
 
   const handleDownloadExport = (fileType) => {
     if (fileType === 'csv') {
-      const headers = ['Date', 'Topic', 'Present Students', 'Absent Students', 'Total Students', 'Attendance %'];
+      // 1. Build the headers
+      // Fixed headers
+      const headers = ['Roll No.', 'Class'];
       
-      const csvRows = historyData.map((session) => {
+      // Dynamic headers for each session (Date - Topic)
+      // Sort sessions by date (oldest first) so they appear chronologically left-to-right
+      const sortedHistory = [...historyData].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+      
+      sortedHistory.forEach((session) => {
         const date = new Date(session.created_at).toLocaleDateString('en-GB');
-        const topic = `"${(session.topic || '').replace(/"/g, '""')}"`;
-        const presentRolls = session.present_students || [];
-        const presentStr = `"${presentRolls.join('; ')}"`;
-        const total = totalRollNumbers ? totalRollNumbers.length : 0;
-        const presentCount = presentRolls.length;
-        const absentCount = Math.max(0, total - presentCount);
-        const percentage = total === 0 ? '100%' : `${((presentCount / total) * 100).toFixed(1)}%`;
-        
-        return [date, topic, presentStr, absentCount, total, percentage].join(',');
+        const topic = session.topic ? ` - ${session.topic}` : '';
+        // Enclose in quotes in case of commas in topic
+        headers.push(`"${date}${topic}"`);
+      });
+      
+      // Calculation headers
+      headers.push('Total Attended', 'Attendance %');
+
+      // 2. Build rows per student
+      const csvRows = [];
+      const safeClassName = `"${className || ''}"`; // In case class name has commas
+      const totalSessions = sortedHistory.length;
+
+      (totalRollNumbers || []).forEach((roll) => {
+        const row = [roll, safeClassName];
+        let attendedCount = 0;
+
+        // Check attendance for each session
+        sortedHistory.forEach((session) => {
+          const presentRolls = session.present_students || [];
+          if (presentRolls.includes(roll)) {
+            row.push('Present');
+            attendedCount++;
+          } else {
+            row.push('Absent');
+          }
+        });
+
+        // Add calculation columns
+        row.push(attendedCount);
+        const percentage = totalSessions === 0 ? '0%' : `${((attendedCount / totalSessions) * 100).toFixed(1)}%`;
+        row.push(percentage);
+
+        csvRows.push(row.join(','));
       });
       
       const csvContent = [headers.join(','), ...csvRows].join('\n');
@@ -112,7 +143,7 @@ export default function HistoryModal({ isOpen, onClose, classId, className, tota
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `${className?.replace(/\s+/g, '_')}_Attendance_History.csv`);
+      link.setAttribute('download', `${className?.replace(/\s+/g, '_')}_Attendance_Sheet.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
