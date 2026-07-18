@@ -333,52 +333,82 @@ function App() {
       </div>
 
       {/* Footer */}
-      <footer className="w-full mt-auto pb-24 md:pb-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          {/* Multi-Column Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-y-10 md:gap-8 mb-12">
-            {/* Column 1 (Brand) */}
-            <div>
-              <p className="text-lg font-bold text-gray-900">EduFocus</p>
-              <p className="text-sm text-gray-500 mt-4">Modern attendance tracking and academic session management.</p>
-            </div>
-            
-            {/* Column 2 (Product) */}
-            <div>
-              <p className="text-sm font-semibold text-gray-900">Product</p>
-              <div className="flex flex-col space-y-3 mt-4">
-                <span className="text-sm text-gray-500 hover:text-primary cursor-pointer">Dashboard</span>
-                <span className="text-sm text-gray-500 hover:text-primary cursor-pointer">Schedule</span>
-              </div>
+      <footer className="w-full mt-auto bg-surface-container-low border-t border-outline-variant/50 pt-16 pb-24 md:pb-12">
+        <div className="max-w-[1440px] mx-auto px-6 md:px-12">
+          {/* Top Section */}
+          <div className="flex flex-col md:flex-row justify-between items-start gap-12 mb-16">
+            {/* Brand Section */}
+            <div className="md:w-1/3">
+              <span className="font-headline-md text-headline-md text-on-surface flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary shadow-sm">
+                  <span className="material-symbols-outlined text-[28px]">school</span>
+                </div>
+                <span className="text-2xl font-black tracking-tight">EduFocus</span>
+              </span>
+              <p className="text-on-surface-variant font-body-lg text-lg max-w-sm leading-relaxed">
+                Modern attendance tracking and academic session management, designed for the next generation of educators.
+              </p>
             </div>
 
-            {/* Column 3 (Resources) */}
-            <div>
-              <p className="text-sm font-semibold text-gray-900">Resources</p>
-              <div className="flex flex-col space-y-3 mt-4">
-                <a href="https://github.com/Ilyan321/attendance-app" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-500 hover:text-primary cursor-pointer no-underline block">GitHub Repository</a>
-                <span className="text-sm text-gray-500 hover:text-primary cursor-pointer">Project Documentation</span>
-                <span className="text-sm text-gray-500 hover:text-primary cursor-pointer">Report an Issue</span>
+            {/* Links Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-16 md:w-2/3">
+              {/* Product */}
+              <div className="flex flex-col gap-6">
+                <h4 className="font-label-lg text-on-surface font-bold uppercase tracking-widest text-xs">Product</h4>
+                <nav className="flex flex-col gap-4">
+                  <button onClick={() => navigate('/')} className="text-left font-body-md text-on-surface-variant hover:text-primary transition-colors w-fit">Dashboard</button>
+                  <button onClick={() => navigate('/schedule')} className="text-left font-body-md text-on-surface-variant hover:text-primary transition-colors w-fit">Schedule</button>
+                  <button onClick={() => navigate('/settings')} className="text-left font-body-md text-on-surface-variant hover:text-primary transition-colors w-fit">Settings</button>
+                </nav>
               </div>
-            </div>
 
-            {/* Column 4 (Developed By) */}
-            <div>
-              <p className="text-sm font-semibold text-gray-900">Developed By</p>
-              <div className="text-sm text-gray-400 font-medium space-y-2 flex flex-col mt-4">
-                <span>Ilyan Khan</span>
-                <span>Rameen Jalal</span>
-                <span>Zainab 15 April</span>
+              {/* Resources */}
+              <div className="flex flex-col gap-6">
+                <h4 className="font-label-lg text-on-surface font-bold uppercase tracking-widest text-xs">Resources</h4>
+                <nav className="flex flex-col gap-4">
+                  <a href="https://github.com/Ilyan321/attendance-app" target="_blank" rel="noopener noreferrer" className="font-body-md text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 group w-fit">
+                    GitHub Repo
+                    <span className="material-symbols-outlined text-[16px] opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all">arrow_outward</span>
+                  </a>
+                  <span className="font-body-md text-on-surface-variant cursor-not-allowed opacity-60 w-fit">Documentation</span>
+                </nav>
+              </div>
+
+              {/* Team */}
+              <div className="flex flex-col gap-6 col-span-2 md:col-span-1 border-t border-outline-variant/30 md:border-none pt-8 md:pt-0">
+                <h4 className="font-label-lg text-on-surface font-bold uppercase tracking-widest text-xs flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[18px] text-primary">code</span>
+                  Developed By
+                </h4>
+                <div className="flex flex-col gap-4 font-body-md text-on-surface-variant">
+                  <span className="flex items-center gap-3 hover:text-on-surface transition-colors cursor-default">
+                    <span className="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-sm font-bold text-on-surface shadow-sm">I</span>
+                    Ilyan Khan
+                  </span>
+                  <span className="flex items-center gap-3 hover:text-on-surface transition-colors cursor-default">
+                    <span className="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-sm font-bold text-on-surface shadow-sm">R</span>
+                    Rameen Jalal
+                  </span>
+                  <span className="flex items-center gap-3 hover:text-on-surface transition-colors cursor-default">
+                    <span className="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-sm font-bold text-on-surface shadow-sm">Z</span>
+                    Zainab 15 April
+                  </span>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Bottom Line */}
-          <div className="flex flex-col md:flex-row justify-between items-center border-t border-gray-200 pt-6 mt-8 md:mt-12 gap-4 md:gap-0 text-center md:text-left">
-            <p className="text-sm text-gray-500">© 2026 EduFocus. All rights reserved.</p>
-            <div className="flex space-x-6 text-sm text-gray-400 mt-4 md:mt-0">
-              <span>v1.0.0</span>
-              <span>Built by team Seneca</span>
+          {/* Bottom Bar */}
+          <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-outline-variant/50 gap-4">
+            <p className="font-body-sm text-sm text-on-surface-variant">
+              © {new Date().getFullYear()} EduFocus. All rights reserved.
+            </p>
+            <div className="flex items-center gap-4 font-label-md text-xs text-on-surface-variant/80 uppercase tracking-widest font-semibold">
+              <span className="bg-surface-container-high px-4 py-1.5 rounded-full shadow-sm text-on-surface">v1.0.0</span>
+              <span className="flex items-center gap-1">
+                <span className="material-symbols-outlined text-[14px]">groups</span>
+                Team Seneca
+              </span>
             </div>
           </div>
         </div>
