@@ -356,7 +356,7 @@ function App() {
             <div>
               <p className="text-sm font-semibold text-gray-900">Resources</p>
               <div className="flex flex-col space-y-3 mt-4">
-                <span className="text-sm text-gray-500 hover:text-primary cursor-pointer">GitHub Repository</span>
+                <a href="https://github.com/Ilyan321/attendance-app" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-500 hover:text-primary cursor-pointer no-underline block">GitHub Repository</a>
                 <span className="text-sm text-gray-500 hover:text-primary cursor-pointer">Project Documentation</span>
                 <span className="text-sm text-gray-500 hover:text-primary cursor-pointer">Report an Issue</span>
               </div>
