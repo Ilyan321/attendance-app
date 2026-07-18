@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ConfirmModal from './ConfirmModal';
+import DownloadModal from './DownloadModal';
 import supabase from './supabaseClient';
 
 export default function HistoryModal({ isOpen, onClose, classId, className, totalRollNumbers }) {
@@ -9,6 +10,7 @@ export default function HistoryModal({ isOpen, onClose, classId, className, tota
   // 'desc' = highest first, 'asc' = lowest first, null = original roll-number order
   const [sortDir, setSortDir] = useState(null);
   const [sessionToDelete, setSessionToDelete] = useState(null);
+  const [downloadModalOpen, setDownloadModalOpen] = useState(false);
 
   useEffect(() => {
     if (!isOpen || !classId) return;
@@ -88,6 +90,37 @@ export default function HistoryModal({ isOpen, onClose, classId, className, tota
     }
   };
 
+  const handleDownloadExport = (fileType) => {
+    if (fileType === 'csv') {
+      const headers = ['Date', 'Topic', 'Present Students', 'Absent Students', 'Total Students', 'Attendance %'];
+      
+      const csvRows = historyData.map((session) => {
+        const date = new Date(session.created_at).toLocaleDateString('en-GB');
+        const topic = `"${(session.topic || '').replace(/"/g, '""')}"`;
+        const presentRolls = session.present_students || [];
+        const presentStr = `"${presentRolls.join('; ')}"`;
+        const total = totalRollNumbers ? totalRollNumbers.length : 0;
+        const presentCount = presentRolls.length;
+        const absentCount = Math.max(0, total - presentCount);
+        const percentage = total === 0 ? '100%' : `${((presentCount / total) * 100).toFixed(1)}%`;
+        
+        return [date, topic, presentStr, absentCount, total, percentage].join(',');
+      });
+      
+      const csvContent = [headers.join(','), ...csvRows].join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `${className?.replace(/\s+/g, '_')}_Attendance_History.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+    setDownloadModalOpen(false);
+  };
+
   return (
     <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/50 backdrop-blur-sm transition-all duration-300">
       <div
@@ -107,13 +140,25 @@ export default function HistoryModal({ isOpen, onClose, classId, className, tota
               {historyData.length} session{historyData.length !== 1 ? 's' : ''} recorded
             </p>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer p-2 rounded-full hover:bg-surface-container-low"
-          >
-            <span className="material-symbols-outlined text-[28px]">close</span>
-          </button>
+          <div className="flex items-center gap-2">
+            {historyData.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setDownloadModalOpen(true)}
+                className="flex items-center gap-2 bg-primary/10 text-primary hover:bg-primary/20 transition-colors cursor-pointer px-4 py-2 rounded-full font-label-md text-label-md font-bold"
+              >
+                <span className="material-symbols-outlined text-[20px]">download</span>
+                Export
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={onClose}
+              className="text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer p-2 rounded-full hover:bg-surface-container-low"
+            >
+              <span className="material-symbols-outlined text-[28px]">close</span>
+            </button>
+          </div>
         </div>
 
         {/* Body */}
@@ -263,6 +308,13 @@ export default function HistoryModal({ isOpen, onClose, classId, className, tota
         message="Are you sure you want to delete this entire attendance session? This will remove the record for all students and cannot be undone."
         onConfirm={executeDeleteSession}
         onCancel={() => setSessionToDelete(null)}
+      />
+
+      <DownloadModal
+        isOpen={downloadModalOpen}
+        title="Export Attendance History"
+        onDownload={handleDownloadExport}
+        onCancel={() => setDownloadModalOpen(false)}
       />
     </div>
   );
