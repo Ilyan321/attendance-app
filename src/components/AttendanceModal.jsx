@@ -3,12 +3,14 @@ import React, { useState, useEffect } from 'react';
 export default function AttendanceModal({ isOpen, classData, onClose, onSaveAttendance }) {
   const [topic, setTopic] = useState('');
   const [presentRolls, setPresentRolls] = useState([]);
+  const [error, setError] = useState('');
 
   // Reset to a clean slate every time the modal opens so each session is independent.
   useEffect(() => {
     if (isOpen && classData) {
       setTopic('');
       setPresentRolls([]);
+      setError('');
     }
   }, [isOpen, classData]);
 
@@ -29,7 +31,7 @@ export default function AttendanceModal({ isOpen, classData, onClose, onSaveAtte
   const handleSave = (e) => {
     if (e && e.preventDefault) e.preventDefault();
     if (!topic || topic.trim() === '') {
-      alert('Please enter what you taught today before saving attendance.');
+      setError('Please enter what you taught today before saving attendance.');
       return;
     }
     onSaveAttendance(classData.id, presentRolls, topic);
@@ -60,6 +62,13 @@ export default function AttendanceModal({ isOpen, classData, onClose, onSaveAtte
             <span className="material-symbols-outlined text-[28px]">close</span>
           </button>
         </div>
+
+        {error && (
+          <div className="bg-error-container text-on-error-container p-4 rounded-lg flex items-center gap-2 mb-6">
+            <span className="material-symbols-outlined">error</span>
+            <span className="font-body-md">{error}</span>
+          </div>
+        )}
 
         {totalStudents === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center bg-surface-container-low rounded-xl p-12 text-center gap-6">
@@ -96,7 +105,10 @@ export default function AttendanceModal({ isOpen, classData, onClose, onSaveAtte
                     placeholder="What you taught today"
                     type="text"
                     value={topic}
-                    onChange={(e) => setTopic(e.target.value)}
+                    onChange={(e) => {
+                      setTopic(e.target.value);
+                      if (error) setError('');
+                    }}
                   />
                 </div>
                 <div className="flex gap-4 w-full md:w-auto justify-end">
