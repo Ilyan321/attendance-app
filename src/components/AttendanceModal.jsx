@@ -28,14 +28,18 @@ export default function AttendanceModal({ isOpen, classData, onClose, onSaveAtte
     }
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     if (e && e.preventDefault) e.preventDefault();
     if (!topic || topic.trim() === '') {
       setError('Please enter what you taught today before saving attendance.');
       return;
     }
-    onSaveAttendance(classData.id, presentRolls, topic);
-    onClose();
+    try {
+      await onSaveAttendance(classData.id, presentRolls, topic);
+      onClose();
+    } catch (err) {
+      setError(err.message || 'Failed to save attendance.');
+    }
   };
 
   return (

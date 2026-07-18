@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import ConfirmModal from './ConfirmModal';
 import supabase from './supabaseClient';
 
 export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDeleteClass, onEditClass, onViewHistory, upcomingSchedules, onOpenSchedule, user, isLoading }) {
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [classToDelete, setClassToDelete] = useState(null);
   const username = user?.user_metadata?.username || 'Teacher';
 
   useEffect(() => {
@@ -13,16 +15,23 @@ export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDe
 
   const hasClasses = classes.length > 0;
 
-  const handleDeleteClass = async (e, classId) => {
+  const handleDeleteClass = (e, classId) => {
     e.stopPropagation();
-    const confirmed = window.confirm('Are you sure you want to delete this class? This cannot be undone.');
-    if (!confirmed) return;
+    setActiveDropdown(null);
+    setClassToDelete(classId);
+  };
+
+  const executeDeleteClass = async () => {
+    if (!classToDelete) return;
     try {
-      const { error } = await supabase.from('classes').delete().eq('id', classId);
+      const { error } = await supabase.from('classes').delete().eq('id', classToDelete);
       if (error) throw error;
-      onDeleteClass(classId);
+      onDeleteClass(classToDelete);
     } catch (err) {
       console.error('Error deleting class:', err.message);
+      // Optional: add a global error state here if needed
+    } finally {
+      setClassToDelete(null);
     }
   };
   
@@ -237,7 +246,7 @@ export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDe
                           </button>
                           <button
                             className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                            onClick={(e) => { e.stopPropagation(); setActiveDropdown(null); handleDeleteClass(e, cls.id); }}
+                            onClick={(e) => { e.stopPropagation(); handleDeleteClass(e, cls.id); }}
                           >
                             Delete Class
                           </button>
@@ -321,6 +330,14 @@ export default function Dashboard({ classes, onSelectClass, onOpenAddClass, onDe
           </div>
         </div>
       </section>
+
+      <ConfirmModal
+        isOpen={!!classToDelete}
+        title="Delete Class"
+        message="Are you sure you want to delete this class? All associated attendance records will be permanently deleted. This action cannot be undone."
+        onConfirm={executeDeleteClass}
+        onCancel={() => setClassToDelete(null)}
+      />
     </main>
   );
 }

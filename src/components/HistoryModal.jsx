@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ConfirmModal from './ConfirmModal';
 import supabase from './supabaseClient';
 
 export default function HistoryModal({ isOpen, onClose, classId, className, totalRollNumbers }) {
@@ -7,6 +8,7 @@ export default function HistoryModal({ isOpen, onClose, classId, className, tota
   const [error, setError] = useState('');
   // 'desc' = highest first, 'asc' = lowest first, null = original roll-number order
   const [sortDir, setSortDir] = useState(null);
+  const [sessionToDelete, setSessionToDelete] = useState(null);
 
   useEffect(() => {
     if (!isOpen || !classId) return;
@@ -66,20 +68,23 @@ export default function HistoryModal({ isOpen, onClose, classId, className, tota
 
   const sortIcon = sortDir === 'desc' ? 'arrow_downward' : sortDir === 'asc' ? 'arrow_upward' : 'unfold_more';
 
-  const handleDeleteSession = async (sessionId) => {
-    const confirmed = window.confirm(
-      'Are you sure you want to delete this entire attendance session? This will remove the record for all students.'
-    );
-    if (!confirmed) return;
+  const handleDeleteSession = (sessionId) => {
+    setSessionToDelete(sessionId);
+  };
+
+  const executeDeleteSession = async () => {
+    if (!sessionToDelete) return;
     try {
       const { error } = await supabase
         .from('attendance_records')
         .delete()
-        .eq('id', sessionId);
+        .eq('id', sessionToDelete);
       if (error) throw error;
-      setHistoryData((prev) => prev.filter((s) => s.id !== sessionId));
+      setHistoryData((prev) => prev.filter((s) => s.id !== sessionToDelete));
     } catch (err) {
       console.error('Error deleting attendance session:', err.message);
+    } finally {
+      setSessionToDelete(null);
     }
   };
 
@@ -251,6 +256,14 @@ export default function HistoryModal({ isOpen, onClose, classId, className, tota
           </button>
         </div>
       </div>
+
+      <ConfirmModal
+        isOpen={!!sessionToDelete}
+        title="Delete Attendance Session"
+        message="Are you sure you want to delete this entire attendance session? This will remove the record for all students and cannot be undone."
+        onConfirm={executeDeleteSession}
+        onCancel={() => setSessionToDelete(null)}
+      />
     </div>
   );
 }

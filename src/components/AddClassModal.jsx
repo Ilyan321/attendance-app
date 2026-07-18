@@ -26,7 +26,7 @@ export default function AddClassModal({ isOpen, onClose, onAddClass, onUpdateCla
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     if (e && e.preventDefault) e.preventDefault();
     setError('');
 
@@ -56,26 +56,30 @@ export default function AddClassModal({ isOpen, onClose, onAddClass, onUpdateCla
       return;
     }
 
-    if (editingClass) {
-      onUpdateClass({
-        ...editingClass,
-        subjectName: subjectName.trim(),
-        department: department.trim(),
-        student_roll_numbers,
-      });
-    } else {
-      onAddClass({
-        subjectName: subjectName.trim(),
-        department: department.trim(),
-        student_roll_numbers,
-      });
-    }
+    try {
+      if (editingClass) {
+        await onUpdateClass({
+          ...editingClass,
+          subjectName: subjectName.trim(),
+          department: department.trim(),
+          student_roll_numbers,
+        });
+      } else {
+        await onAddClass({
+          subjectName: subjectName.trim(),
+          department: department.trim(),
+          student_roll_numbers,
+        });
+      }
 
-    // Reset fields and close
-    setSubjectName('');
-    setDepartment('');
-    setRollNumbersText('');
-    onClose();
+      // Reset fields and close
+      setSubjectName('');
+      setDepartment('');
+      setRollNumbersText('');
+      onClose();
+    } catch (err) {
+      setError(err.message || 'An error occurred while saving the class.');
+    }
   };
 
   return (

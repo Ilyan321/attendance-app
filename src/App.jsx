@@ -146,7 +146,7 @@ function App() {
       }
     } catch (err) {
       console.error('Error adding class:', err.message);
-      alert('Failed to add class: ' + err.message);
+      throw err;
     }
   };
 
@@ -168,6 +168,7 @@ function App() {
       );
     } catch (err) {
       console.error('Error updating class:', err.message);
+      throw err;
     } finally {
       setEditingClass(null);
       setIsAddClassOpen(false);
@@ -211,7 +212,7 @@ function App() {
       );
     } catch (err) {
       console.error('Error saving attendance:', err.message);
-      alert('Failed to save attendance: ' + err.message);
+      throw err;
     }
   };
 

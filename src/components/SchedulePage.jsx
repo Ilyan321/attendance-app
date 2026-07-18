@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ConfirmModal from './ConfirmModal';
 import supabase from './supabaseClient';
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
@@ -24,6 +25,8 @@ export default function SchedulePage() {
   const [newTime,  setNewTime]  = useState('');
   const [adding,   setAdding]   = useState(false);
   const [formError, setFormError] = useState('');
+  
+  const [scheduleToDelete, setScheduleToDelete] = useState(null);
 
   useEffect(() => {
     const fetchSchedules = async () => {
@@ -47,15 +50,20 @@ export default function SchedulePage() {
     fetchSchedules();
   }, []);
 
-  const handleDeleteSchedule = async (id) => {
-    const confirmed = window.confirm('Delete this schedule item?');
-    if (!confirmed) return;
+  const handleDeleteSchedule = (id) => {
+    setScheduleToDelete(id);
+  };
+
+  const executeDeleteSchedule = async () => {
+    if (!scheduleToDelete) return;
     try {
-      const { error } = await supabase.from('schedules').delete().eq('id', id);
+      const { error } = await supabase.from('schedules').delete().eq('id', scheduleToDelete);
       if (error) throw error;
-      setSchedules((prev) => prev.filter((s) => s.id !== id));
+      setSchedules((prev) => prev.filter((s) => s.id !== scheduleToDelete));
     } catch (err) {
       console.error('Error deleting schedule:', err.message);
+    } finally {
+      setScheduleToDelete(null);
     }
   };
 
@@ -294,6 +302,14 @@ export default function SchedulePage() {
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={!!scheduleToDelete}
+        title="Delete Schedule Item"
+        message="Are you sure you want to delete this schedule item? This action cannot be undone."
+        onConfirm={executeDeleteSchedule}
+        onCancel={() => setScheduleToDelete(null)}
+      />
     </main>
   );
 }
