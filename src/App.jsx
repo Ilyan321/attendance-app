@@ -32,6 +32,11 @@ function App() {
     setSession((prev) => (prev ? { ...prev, user: updatedUser } : prev));
   }, []);
 
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  }, [location.pathname]);
+
   // Monitor Supabase Authentication state
   useEffect(() => {
     supabase.auth.getSession()
